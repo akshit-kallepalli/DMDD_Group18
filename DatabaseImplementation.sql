@@ -38,3 +38,36 @@ CREATE TABLE Lease_Tenant (
   CONSTRAINT PK_Lease_Tenant PRIMARY KEY CLUSTERED (LeaseID, TenantID),
 );
 
+-- create ManagementCompany table with a 
+CREATE TABLE ManagementCompany (
+  CompanyID INT IDENTITY PRIMARY KEY,
+  CompanyName VARCHAR(45) NOT NULL,
+  PhoneNumber INT NOT NULL,
+  Email VARCHAR(45) NOT NULL,
+  AddressID VARCHAR(45) NOT NULL
+  FOREIGN KEY (AddressID) REFERENCES Address(AddressID)
+);
+
+
+CREATE TABLE Employee (
+  EmployeeID INT IDENTITY PRIMARY KEY,
+  AddressID VARCHAR(50),
+  CompanyID INT NOT NULL,
+  FirstName VARCHAR(25) NOT NULL,
+  LastName VARCHAR(25) NOT NULL,
+  Type VARCHAR(15) NOT NULL,
+  PhoneNumber INT NOT NULL,
+  Email VARCHAR(45) NOT NULL,
+  FOREIGN KEY (AddressID) REFERENCES Address(AddressID),
+  FOREIGN KEY (CompanyID) REFERENCES ManagementCompany(CompanyID)
+);
+
+CREATE TABLE EmployeeBuilding(
+  EmployeeID INT NOT NULL
+	REFERENCES Employee(EmployeeID),
+  BuildingID INT NOT NULL
+	REFERENCES Building(BuildingID),
+  CONSTRAINT PK_EmployeeBuilding PRIMARY KEY CLUSTERED (EmployeeID, BuildingID)
+);
+
+
