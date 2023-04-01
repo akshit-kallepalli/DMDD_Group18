@@ -80,6 +80,41 @@ CREATE TABLE Address(
   Zipcode INT NOT NULL
 );
 
+-- insert data into the Lease table
+INSERT INTO Lease (UnitID, TenantID, StartDate, EndDate, MonthlyRent, SecurityDeposit)
+VALUES (1, 1, '2022-01-01', '2023-01-01', 1000.00, 1000.00),
+       (1, 2, '2022-02-01', '2023-02-01', 1200.00, 1200.00),
+       (2, 3, '2022-03-01', '2023-03-01', 1500.00, 1500.00),
+       (2, 4, '2022-04-01', '2023-04-01', 900.00, 900.00),
+       (3, 5, '2022-05-01', '2023-05-01', 800.00, 800.00),
+       (3, 6, '2022-06-01', '2023-06-01', 1100.00, 1100.00),
+       (4, 7, '2022-07-01', '2023-07-01', 950.00, 950.00),
+       (4, 8, '2022-08-01', '2023-08-01', 1300.00, 1300.00),
+       (5, 9, '2022-09-01', '2023-09-01', 1400.00, 1400.00),
+       (5, 10, '2022-10-01', '2023-10-01', 1000.00, 1000.00);
+
+-- insert data into the LeasePayment table
+INSERT INTO LeasePayment (LeaseID, PaymentAmount, PaymentDate)
+VALUES (1, 1000.00, '2022-01-01'),
+       (1, 200.00, '2022-02-01'),
+       (2, 1200.00, '2022-02-01'),
+       (3, 1500.00, '2022-03-01'),
+       (4, 900.00, '2022-04-01'),
+       (4, 100.00, '2022-05-01'),
+       (5, 800.00, '2022-06-01'),
+       (6, 1100.00, '2022-07-01'),
+       (7, 950.00, '2022-08-01'),
+       (8, 1300.00, '2022-09-01');
+
+-- insert data into the Tenant table
+INSERT INTO Tenant (FirstName, LastName, PhoneNumber, Email)
+VALUES ('John', 'Doe', '555-1234', 'john.doe@email.com'),
+       ('Jane', 'Doe', '555-5678', 'jane.doe@email.com'),
+       ('Bob', 'Smith', '555-9876', 'bob.smith@email.com'),
+       ('Sally', 'Johnson', '555-6543', 'sally.johnson@email.com'),
+       ('Mike', 'Williams', '555-2345', 'mike.williams@email.com'),
+       ('Karen', 'Davis', '555-4321', 'karen.davis@email.com'),
+       ('Tom', 'Brown', '555-8765', 'tom.brown
 
 -- insert data into Address table
 INSERT INTO Address 
