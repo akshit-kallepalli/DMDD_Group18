@@ -38,7 +38,7 @@ CREATE TABLE Lease_Tenant (
   CONSTRAINT PK_Lease_Tenant PRIMARY KEY CLUSTERED (LeaseID, TenantID),
 );
 
--- create ManagementCompany table with a 
+-- create ManagementCompany table 
 CREATE TABLE ManagementCompany (
   CompanyID INT IDENTITY PRIMARY KEY,
   CompanyName VARCHAR(45) NOT NULL,
@@ -48,7 +48,7 @@ CREATE TABLE ManagementCompany (
   FOREIGN KEY (AddressID) REFERENCES Address(AddressID)
 );
 
-
+-- create Employee table
 CREATE TABLE Employee (
   EmployeeID INT IDENTITY PRIMARY KEY,
   AddressID VARCHAR(50),
@@ -62,6 +62,7 @@ CREATE TABLE Employee (
   FOREIGN KEY (CompanyID) REFERENCES ManagementCompany(CompanyID)
 );
 
+-- create EmployeeBuilding table with a clustered primary key constraint
 CREATE TABLE EmployeeBuilding(
   EmployeeID INT NOT NULL
 	REFERENCES Employee(EmployeeID),
