@@ -1,12 +1,12 @@
 -- create Lease table
 CREATE TABLE Lease (
   LeaseID INT IDENTITY PRIMARY KEY,
-  UnitID INT,
-  TenantID INT,
-  StartDate DATE,
-  EndDate DATE,
-  MonthlyRent DECIMAL(10,2),
-  SecurityDeposit DECIMAL(10,2),
+  UnitID INT NOT NULL,
+  TenantID INT NOT NULL,
+  StartDate DATE NOT NULL,
+  EndDate DATE NOT NULL,
+  MonthlyRent DECIMAL(10,2) NOT NULL,
+  SecurityDeposit DECIMAL(10,2) NOT NULL,
   FOREIGN KEY (UnitID) REFERENCES Unit(UnitID),
   FOREIGN KEY (TenantID) REFERENCES Tenant(TenantID)
 );
@@ -14,19 +14,19 @@ CREATE TABLE Lease (
 -- create Lease Payment table
 CREATE TABLE LeasePayment (
   LeasePaymentID INT IDENTITY PRIMARY KEY,
-  LeaseID INT,
-  PaymentAmount DECIMAL(10,2),
-  PaymentDate DATE,
+  LeaseID INT NOT NULL,
+  PaymentAmount DECIMAL(10,2) NOT NULL,
+  PaymentDate DATE NOT NULL,
   FOREIGN KEY (LeaseID) REFERENCES Lease(LeaseID)
 );
 
 -- create Tenant table
 CREATE TABLE Tenant (
   TenantID INT IDENTITY PRIMARY KEY,
-  FirstName VARCHAR(50),
-  LastName VARCHAR(50),
-  PhoneNumber VARCHAR(20),
-  Email VARCHAR(100)
+  FirstName VARCHAR(50) NOT NULL,
+  LastName VARCHAR(50) NOT NULL,
+  PhoneNumber VARCHAR(20) NOT NULL,
+  Email VARCHAR(100) NOT NULL
 );
 
 -- create Lease_Tenant table with a clustered primary key constraint
