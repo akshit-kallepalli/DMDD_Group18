@@ -129,11 +129,26 @@ UnitID INT NOT NULL,
 Gasbill FLOAT NOT NULL,
 ElectricityBill FLOAT NOT NULL,
 WaterBill FLOAT NOT NULL,
-TotalFee FLOAT NOT NULL,
+--computed column	
+TotalFee AS CalculateTotalFee(Gasbill, ElectricityBill, WaterBill),
 PaymentDate DATE NOT NULL,
 FOREIGN KEY (UnitID) REFERENCES Unit(UnitID)
 );
 
+
+-- The function used to create a computed column in Utilities Table
+GO
+
+CREATE FUNCTION CalculateTotalFee(@gas_bill FLOAT, @electricity_bill FLOAT, @water_bill FLOAT)
+RETURNS FLOAT
+AS
+BEGIN
+    DECLARE @TotalFee FLOAT;
+    SET @TotalPayment =  @gas_bill + @electricity_bill + @water_bill
+    RETURN @TotalPayment;
+END
+
+GO
 
 -- create TenantUnit table with a clustered primary key constraint
 CREATE TABLE TenantUnit(
