@@ -80,6 +80,69 @@ CREATE TABLE Address(
   Zipcode INT NOT NULL
 );
 
+CREATE TABLE Building (
+  Building_ID INT IDENTITY(1,1) PRIMARY KEY,
+  AddressID INT FOREIGN KEY REFERENCES Address(AddressID),
+  CompanyID INT FOREIGN KEY REFERENCES ManagementCompany(CompanyID),
+  Building_Name VARCHAR(255),
+  Building_Type VARCHAR(255),
+  Unit_Number INT,
+  NoOf_Floors INT,
+  PhoneNumber VARCHAR(20),
+  Email VARCHAR(255)
+);
+
+CREATE TABLE Parking(
+   Parking_ID INT IDENTITY(1,1) PRIMARY KEY,
+   Unit_ID INT FOREIGN KEY REFERENCES Unit(Unit_ID),
+   Fee FLOAT,
+   PaymentDate DATE
+);
+
+CREATE TABLE Amenity (
+  Amenity_ID INT IDENTITY(1,1) PRIMARY KEY,
+  Building_ID INT FOREIGN KEY REFERENCES Building(Building_ID),
+  Amenity_Name VARCHAR(255),
+  Amenity_Type VARCHAR(255),
+  Cost FLOAT
+);
+
+INSERT INTO Amenity(Building_ID, Amenity_Name, Amenity_Type, Cost)
+VALUES (1, 'Swimming Pool', 'Recreational', 150.00),
+       (1, 'Gym', 'Fitness', 100.00),
+       (2, 'Tennis Court', 'Recreational', 50.00),
+       (2, 'BBQ Area', 'Recreational', 25.00),
+       (3, 'Meeting Room', 'Business', 75.00),
+       (4, 'Movie Theater', 'Entertainment', 200.00),
+       (5, 'Playground', 'Recreational', 35.00),
+       (6, 'Dog Park', 'Recreational', 50.00),
+       (7, 'Yoga Studio', 'Fitness', 80.00),
+       (8, 'Game Room', 'Entertainment', 125.00);
+       
+INSERT INTO Parking(Unit_ID, Fee, PaymentDate)
+VALUES (1, 50.0, '2022-03-01'),
+       (2, 25.0, '2022-03-02'),
+       (3, 35.0, '2022-03-03'),
+       (4, 20.0, '2022-03-04'),
+       (5, 30.0, '2022-03-05'),
+       (6, 40.0, '2022-03-06'),
+       (7, 45.0, '2022-03-07'),
+       (8, 15.0, '2022-03-08'),
+       (9, 55.0, '2022-03-09'),
+       (10, 10.0, '2022-03-10');
+       
+INSERT INTO Building (AddressID, CompanyID, Building_Name, Building_Type, Unit_Number, NoOf_Floors, PhoneNumber, Email)
+VALUES (1, 1, 'ABC Building', 'Office', 50, 10, '123-456-7890', 'abc@building.com'),
+       (2, 1, 'XYZ Building', 'Residential', 100, 20, '111-222-3333', 'xyz@building.com'),
+       (3, 2, 'PQR Building', 'Retail', 25, 5, '444-555-6666', 'pqr@building.com'),
+       (1, 3, 'MNO Building', 'Office', 75, 15, '777-888-9999', 'mno@building.com'),
+       (2, 2, 'EFG Building', 'Residential', 200, 30, '555-666-7777', 'efg@building.com'),
+       (3, 1, 'LMN Building', 'Retail', 10, 2, '111-444-7777', 'lmn@building.com'),
+       (4, 3, 'STU Building', 'Office', 100, 20, '333-777-1111', 'stu@building.com'),
+       (4, 2, 'GHI Building', 'Residential', 50, 10, '444-999-2222', 'ghi@building.com'),
+       (1, 2, 'DEF Building', 'Retail', 15, 3, '222-555-8888', 'def@building.com'),
+       (3, 3, 'VWX Building', 'Office', 125, 25, '777-111-4444', 'vwx@building.com');
+
 -- insert data into the Lease table
 INSERT INTO Lease (UnitID, TenantID, StartDate, EndDate, MonthlyRent, SecurityDeposit)
 VALUES (1, 1, '2022-01-01', '2023-01-01', 1000.00, 1000.00),
