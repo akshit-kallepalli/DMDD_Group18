@@ -107,6 +107,85 @@ CREATE TABLE Amenity (
   Cost FLOAT
 );
 
+
+
+--create table unit
+CREATE TABLE Unit(
+UnitID INT IDENTITY PRIMARY KEY,
+BuildingID INT NOT NULL,
+UnitNo INT NOT NULL,
+Bedroom INT NOT NULL,
+Bathroom FLOAT NOT NULL,
+Availability VARCHAR(45) NOT NULL,
+SquareFootage float NOT NULL,
+FOREIGN KEY (BuildingID) REFERENCES Building(BuildingID)
+);
+
+
+--create table utilities
+CREATE TABLE Utilities(
+UtilitiesID INT IDENTITY PRIMARY KEY,
+UnitID INT NOT NULL,
+Gasbill FLOAT NOT NULL,
+ElectricityBill FLOAT NOT NULL,
+WaterBill FLOAT NOT NULL,
+TotalFee FLOAT NOT NULL,
+PaymentDate DATE NOT NULL,
+FOREIGN KEY (UnitID) REFERENCES Unit(UnitID)
+);
+
+
+-- create TenantUnit table with a clustered primary key constraint
+CREATE TABLE TenantUnit(
+TenantID INT NOT NULL
+         REFERENCES Tenant(TenantID),
+UnitID INT NOT NULL
+         REFERENCES Unit(UnitID),
+CONSTRAINT PK_TenantUnit PRIMARY KEY CLUSTERED (TenantID,UnitID)
+);
+
+
+
+INSERT INTO Unit
+	(BuildingID, UnitNo, Bedroom, Bathroom, Availability, SquareFootage)
+VALUES
+	(1, 101, 1, 1, 'available', 500),
+	(1, 102, 2, 2, 'occupied', 1000),
+	(1, 103, 3, 2.5, 'available', 1500),
+	(2, 201, 2, 1.5, 'occupied', 1000),
+	(2, 202, 1, 1, 'available', 500),
+	(2, 203, 2, 2, 'available', 1000),
+	(3, 301, 2, 1.5, 'available', 1000),
+	(3, 302, 3, 2, 'occupied', 1500),
+	(3, 303, 1, 1, 'available', 500),
+	(4, 401, 2, 2, 'occupied', 1000),
+	(4, 402, 3, 2.5, 'available', 1500),
+	(4, 403, 1, 1, 'available', 500),
+	(5, 501, 1, 1, 'occupied', 500),
+	(5, 502, 2, 1.5, 'available', 1000),
+	(5, 503, 3, 2, 'available', 1500);
+
+
+
+	INSERT INTO Utilities (UnitID, Gasbill, ElectricityBill, WaterBill, TotalFee, PaymentDate)
+VALUES 
+	(1, 50.0, 25.0, 20.0, 95.0, '2023-02-01'),
+	(2, 60.0, 30.0, 25.0, 115.0, '2023-02-01'),
+	(3, 70.0, 35.0, 30.0, 135.0, '2023-02-01'),
+	(4, 80.0, 40.0, 35.0, 155.0, '2023-02-01'),
+	(5, 90.0, 45.0, 40.0, 175.0, '2023-02-01'),
+	(6, 100.0, 50.0, 45.0, 195.0, '2023-02-01'),
+	(7, 110.0, 55.0, 50.0, 215.0, '2023-02-01'),
+	(8, 120.0, 60.0, 55.0, 235.0, '2023-02-01'),
+	(9, 130.0, 65.0, 60.0, 255.0, '2023-02-01'),
+	(10, 140.0, 70.0, 65.0, 275.0, '2023-02-01'),
+	(11, 50.0, 25.0, 20.0, 95.0, '2023-03-01'),
+	(12, 60.0, 30.0, 25.0, 115.0, '2023-03-01'),
+	(13, 70.0, 35.0, 30.0, 135.0, '2023-03-01'),
+	(14, 80.0, 40.0, 35.0, 155.0, '2023-03-01'),
+	(15, 90.0, 45.0, 40.0, 175.0, '2023-03-01');
+
+
 INSERT INTO Amenity(Building_ID, Amenity_Name, Amenity_Type, Cost)
 VALUES (1, 'Swimming Pool', 'Recreational', 150.00),
        (1, 'Gym', 'Fitness', 100.00),
@@ -178,6 +257,9 @@ VALUES ('John', 'Doe', '555-1234', 'john.doe@email.com'),
        ('Mike', 'Williams', '555-2345', 'mike.williams@email.com'),
        ('Karen', 'Davis', '555-4321', 'karen.davis@email.com'),
        ('Tom', 'Brown', '555-8765', 'tom.brown
+
+
+
 
 -- insert data into Address table
 INSERT INTO Address 
