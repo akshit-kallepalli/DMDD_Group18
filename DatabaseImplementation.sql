@@ -321,6 +321,32 @@ VALUES
        (18, 4, 'Katie', 'Brown', 'Maintenance Staff', 5550123, 'katie.brown@example.com'),
        (19, 5, 'Joe', 'Gray', 'Manager', 5554567, 'joe.gray@example.com'),
        (20, 5, 'Amy', 'Taylor', 'Maintenance Staff', 5558901, 'amy.taylor@example.com');
+       
+       
+       
+       
+-- create a funtion used to create a computed column
+GO
 
+CREATE FUNCTION GetTotalParkingFee_Unit(@UnitID INT)
+RETURNS FLOAT(10,2)
+AS
+BEGIN
+    DECLARE @TotalPayment FLOAT(10,2)
+    SELECT  @TotalPayment = SUM(Fee) 
+    FROM Parking
+    WHERE UnitID = @UnitID
+    RETURN @TotalPayment;
+END
+
+GO
+
+-- create a view to show the total parking payment for each unit
+
+CREATE VIEW unit_parkingfee AS
+SELECT DISTINCT UnitID, GetTotalParkingFee_Unit(UnitID) AS TotalParkingPayment, COUNT(UnitID) AS PaymentTimes
+FROM Parking p;
+
+SELECT * FROM unit_parkingfee;
 
 
