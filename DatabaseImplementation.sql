@@ -129,11 +129,26 @@ UnitID INT NOT NULL,
 Gasbill FLOAT NOT NULL,
 ElectricityBill FLOAT NOT NULL,
 WaterBill FLOAT NOT NULL,
-TotalFee FLOAT NOT NULL,
+--computed column	
+TotalFee AS CalculateTotalFee(Gasbill, ElectricityBill, WaterBill),
 PaymentDate DATE NOT NULL,
 FOREIGN KEY (UnitID) REFERENCES Unit(UnitID)
 );
 
+
+-- The function used to create a computed column in Utilities Table
+GO
+
+CREATE FUNCTION CalculateTotalFee(@gas_bill FLOAT, @electricity_bill FLOAT, @water_bill FLOAT)
+RETURNS FLOAT
+AS
+BEGIN
+    DECLARE @TotalFee FLOAT;
+    SET @TotalPayment =  @gas_bill + @electricity_bill + @water_bill
+    RETURN @TotalPayment;
+END
+
+GO
 
 -- create TenantUnit table with a clustered primary key constraint
 CREATE TABLE TenantUnit(
@@ -305,6 +320,44 @@ VALUES
        (18, 4, 'Katie', 'Brown', 'Maintenance Staff', 5550123, 'katie.brown@example.com'),
        (19, 5, 'Joe', 'Gray', 'Manager', 5554567, 'joe.gray@example.com'),
        (20, 5, 'Amy', 'Taylor', 'Maintenance Staff', 5558901, 'amy.taylor@example.com');
+       
+INSERT INTO Address (Detailed_Address, City, State, ZipCode)
+VALUES 
+('123 Main Street', 'New York', 'NY', 10001),
+('456 Elm Street', 'Los Angeles', 'CA', 90012),
+('789 Oak Street', 'Chicago', 'IL', 60611),
+('987 Pine Street', 'Houston', 'TX', 77002),
+('654 Maple Street', 'Seattle', 'WA', 98101),
+('246 Broadway', 'Boston', 'MA', 02115),
+('1350 15th Street', 'Denver', 'CO', 80202),
+('3780 Wilshire Blvd', 'Los Angeles', 'CA', 90010),
+('1600 Pennsylvania Ave NW', 'Washington', 'DC', 20500),
+('3300 Las Vegas Blvd S', 'Las Vegas', 'NV', 89109);
+       
+       
+       
+-- create a funtion used to create a computed column
+GO
 
+CREATE FUNCTION GetTotalParkingFee_Unit(@UnitID INT)
+RETURNS FLOAT(10,2)
+AS
+BEGIN
+    DECLARE @TotalPayment FLOAT(10,2)
+    SELECT  @TotalPayment = SUM(Fee) 
+    FROM Parking
+    WHERE UnitID = @UnitID
+    RETURN @TotalPayment;
+END
+
+GO
+
+-- create a view to show the total parking payment for each unit
+
+CREATE VIEW unit_parkingfee AS
+SELECT DISTINCT UnitID, GetTotalParkingFee_Unit(UnitID) AS TotalParkingPayment, COUNT(UnitID) AS PaymentTimes
+FROM Parking p;
+
+SELECT * FROM unit_parkingfee;
 
 
