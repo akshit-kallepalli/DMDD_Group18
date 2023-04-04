@@ -135,6 +135,39 @@ PaymentDate DATE NOT NULL,
 FOREIGN KEY (UnitID) REFERENCES Unit(UnitID)
 );
 
+--Unit Maintenance Request
+--Prospective Tenant
+--Prospective Tenant_InterestedUnit
+
+CREATE TABLE ProspectiveTenant (
+  P_tenantID INT IDENTITY PRIMARY KEY,
+  FirstName VARCHAR(45) NOT NULL,
+  LastName VARCHAR(45) NOT NULL,
+  PhoneNumber INT NOT NULL,
+  Email VARCHAR(45)
+);
+ 
+ CREATE TABLE UnitMaintenanceRequest (
+  RequestID INT IDENTITY PRIMARY KEY,
+  TenantID INT NOT NULL,
+  UnitID INT NOT NULL,
+  EmployeeID INT NOT NULL,
+  Description VARCHAR(45) NOT NULL,
+  Status VARCHAR(45) NOT NULL,
+  RequestDate DATE NOT NULL,
+  CompletedDate DATE NOT NULL,
+  FOREIGN KEY (TenantID) REFERENCES Tenant(TenantID),
+  FOREIGN KEY (UnitID) REFERENCES Unit(UnitID)
+);
+
+CREATE TABLE ProspectiveTenantInterestedUnit(
+   P_TenantID INT NOT NULL
+	REFERENCES ProspectiveTenant(P_tenantID),
+   UnitID INT NOT NULL
+	REFERENCES Unit(UnitID),
+  CONSTRAINT PK_ProspectiveTenantInterestedUnit PRIMARY KEY CLUSTERED (P_TenantID, UnitID)
+);
+
 
 -- The function used to create a computed column in Utilities Table
 GO
