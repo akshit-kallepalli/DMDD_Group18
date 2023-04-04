@@ -147,7 +147,7 @@ CREATE TABLE ProspectiveTenant (
   Email VARCHAR(45)
 );
  
- CREATE TABLE UnitMaintenanceRequest (
+CREATE TABLE UnitMaintenanceRequest (
   RequestID INT IDENTITY PRIMARY KEY,
   TenantID INT NOT NULL,
   UnitID INT NOT NULL,
