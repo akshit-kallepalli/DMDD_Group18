@@ -408,20 +408,20 @@ VALUES ('John', 'Smith', '(730) 729-4030', 'dbrobins@mac.com'),
        ('Clayton', 'Ward', '(323) 567-9962', 'frode@aol.com'),
        ('Alejandro', 'Dennis', '(610) 401-9660', 'pfitza@live.com');
 
---insert data into UnitMaintenanceRequest
-INSERT INTO UnitMaintenanceRequest
-    (TenantID, UnitID, EmployeeID, Description, Status, RequestDate, CompletedDate)
-VALUES (13, 25, 57, 'Ginger', 'short hair', '2023-05-09', '2023-06-05'),
-       (15, 22, 58, 'tense face', 'blend seamlessly', '2023-07-13', '2023-06-05'),
-       (17, 23, 53, 'blue eyes', 'freshly baked bread', '2023-06-06', '2023-09-05'),
-       (20, 24, 64, 'set narrowly', 'majestic weeping willow', '2023-05-26', '2023-06-26'),
-       (60, 20, 68, 'forgotten valley', 'gentle breeze', '2023-05-19', '2023-08-31'),
-       (87, 44, 69, 'obblestone streets', 'local farmers', '2023-05-09', '2023-06-05'),
-       (13, 33, 43, 'sweet aroma', 'sparkling river', '2023-10-13', '2023-11-21'),
-       (38, 59, 41, 'symphony of progress', 'glow bathes', '2023-05-11', '2023-06-22'),
-       (21, 47, 68, 'eart of Verivale', 'local tavern', '2023-08-11', '2023-09-21'),
-       (16, 40, 31, 'casting dappled', 'enduring spirit ', '2023-04-19', '2023-06-13');
- 
+-- Assuming TenantID 1 and UnitID 1 exist in their respective tables
+INSERT INTO UnitMaintenanceRequest (TenantID, UnitID, EmployeeID, Description, Status, RequestDate, CompletedDate)
+VALUES
+(1, 1, 123, 'Leaky faucet', 'Open', '2023-03-01', '2023-03-05'),
+(2, 2, 234, 'Broken toilet', 'Open', '2023-03-02', '2023-03-06'),
+(3, 1, 345, 'Clogged drain', 'Open', '2023-03-03', '2023-03-07'),
+(4, 3, 456, 'Faulty light switch', 'Open', '2023-03-04', '2023-03-08'),
+(5, 2, 567, 'No hot water', 'Open', '2023-03-05', '2023-03-09'),
+(6, 3, 678, 'Leaking ceiling', 'Open', '2023-03-06', '2023-03-10'),
+(7, 1, 789, 'Loud HVAC unit', 'Open', '2023-03-07', '2023-03-11'),
+(8, 2, 890, 'Bathroom sink not draining', 'Open', '2023-03-08', '2023-03-12'),
+(9, 3, 901, 'Damaged window', 'Open', '2023-03-09', '2023-03-13'),
+(10, 1, 012, 'Appliance not working', 'Open', '2023-03-10', '2023-03-14');
+
  
 --insert data into EmployeeBuilding table
 INSERT INTO EmployeeBuilding (EmployeeID, BuildingID)
