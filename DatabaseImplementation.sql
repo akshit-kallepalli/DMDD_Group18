@@ -321,7 +321,7 @@ VALUES
        (19, 5, 'Joe', 'Gray', 'Manager', 5554567, 'joe.gray@example.com'),
        (20, 5, 'Amy', 'Taylor', 'Maintenance Staff', 5558901, 'amy.taylor@example.com');
        
-INSERT INTO Address (Detailed_Address, City, State, ZipCode)
+INSERT INTO Address (DetailedAddress, City, State, ZipCode)
 VALUES 
 ('123 Main Street', 'New York', 'NY', 10001),
 ('456 Elm Street', 'Los Angeles', 'CA', 90012),
