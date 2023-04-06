@@ -1,13 +1,13 @@
 -- create Lease table
 CREATE TABLE Lease (
   LeaseID INT IDENTITY PRIMARY KEY,
-  UnitID INT NOT NULL,
+  Unit_ID INT NOT NULL,
   TenantID INT NOT NULL,
   StartDate DATE NOT NULL,
   EndDate DATE NOT NULL,
   MonthlyRent DECIMAL(10,2) NOT NULL,
   SecurityDeposit DECIMAL(10,2) NOT NULL,
-  FOREIGN KEY (UnitID) REFERENCES Unit(UnitID),
+  FOREIGN KEY (Unit_ID) REFERENCES Unit(Unit_ID),
   FOREIGN KEY (TenantID) REFERENCES Tenant(TenantID)
 );
 
@@ -55,7 +55,7 @@ CREATE TABLE Employee (
   CompanyID INT NOT NULL,
   FirstName VARCHAR(25) NOT NULL,
   LastName VARCHAR(25) NOT NULL,
-  Type VARCHAR(30) NOT NULL,
+  Type VARCHAR(15) NOT NULL,
   PhoneNumber INT NOT NULL,
   Email VARCHAR(45) NOT NULL,
   FOREIGN KEY (AddressID) REFERENCES Address(AddressID),
@@ -66,9 +66,9 @@ CREATE TABLE Employee (
 CREATE TABLE EmployeeBuilding(
   EmployeeID INT NOT NULL
 	REFERENCES Employee(EmployeeID),
-  BuildingID INT NOT NULL
+  Building_ID INT NOT NULL
 	REFERENCES Building(Building_ID),
-  CONSTRAINT PK_EmployeeBuilding PRIMARY KEY CLUSTERED (EmployeeID, BuildingID)
+  CONSTRAINT PK_EmployeeBuilding PRIMARY KEY CLUSTERED (EmployeeID, Building_ID)
 );
 
 -- create table adddress
@@ -94,7 +94,7 @@ CREATE TABLE Building (
 
 CREATE TABLE Parking(
    Parking_ID INT IDENTITY(1,1) PRIMARY KEY,
-   UnitID INT FOREIGN KEY REFERENCES Unit(Unit_ID),
+   Unit_ID INT FOREIGN KEY REFERENCES Unit(Unit_ID),
    Fee FLOAT,
    PaymentDate DATE
 );
@@ -111,19 +111,31 @@ CREATE TABLE Amenity (
 
 --create table unit
 CREATE TABLE Unit(
-UnitID INT IDENTITY PRIMARY KEY,
-BuildingID INT NOT NULL,
+Unit_ID INT IDENTITY PRIMARY KEY,
+Building_ID INT NOT NULL,
 UnitNo INT NOT NULL,
 Bedroom INT NOT NULL,
 Bathroom FLOAT NOT NULL,
 Availability VARCHAR(45) NOT NULL,
 SquareFootage float NOT NULL,
-FOREIGN KEY (BuildingID) REFERENCES Building(BuildingID)
+FOREIGN KEY (Building_ID) REFERENCES Building(Building_ID)
 );
 
 
+--create table utilities
+CREATE TABLE Utilities(
+UtilitiesID INT IDENTITY PRIMARY KEY,
+Unit_ID INT NOT NULL,
+Gasbill FLOAT NOT NULL,
+ElectricityBill FLOAT NOT NULL,
+WaterBill FLOAT NOT NULL,
+--computed column	
+TotalFee AS CalculateTotalFee(Gasbill, ElectricityBill, WaterBill),
+PaymentDate DATE NOT NULL,
+FOREIGN KEY (Unit_ID) REFERENCES Unit(Unit_ID)
+);
 
--- It should be put before "create table utilities"
+
 -- The function used to create a computed column in Utilities Table
 GO
 
@@ -138,67 +150,19 @@ END
 
 GO
 
---create table utilities
-CREATE TABLE Utilities(
-UtilitiesID INT IDENTITY PRIMARY KEY,
-UnitID INT NOT NULL,
-Gasbill FLOAT NOT NULL,
-ElectricityBill FLOAT NOT NULL,
-WaterBill FLOAT NOT NULL,
---computed column, (dbo.) is required before the function
-TotalFee AS dbo.CalculateTotalFee(Gasbill, ElectricityBill, WaterBill),
-PaymentDate DATE NOT NULL,
-FOREIGN KEY (UnitID) REFERENCES Unit(UnitID)
-);
-
---Unit Maintenance Request
---Prospective Tenant
---Prospective Tenant_InterestedUnit
-
-CREATE TABLE ProspectiveTenant (
-  P_tenantID INT IDENTITY PRIMARY KEY,
-  FirstName VARCHAR(45) NOT NULL,
-  LastName VARCHAR(45) NOT NULL,
-  PhoneNumber INT NOT NULL,
-  Email VARCHAR(45)
-);
- 
-CREATE TABLE UnitMaintenanceRequest (
-  RequestID INT IDENTITY PRIMARY KEY,
-  TenantID INT NOT NULL,
-  UnitID INT NOT NULL,
-  EmployeeID INT NOT NULL,
-  Description VARCHAR(45) NOT NULL,
-  Status VARCHAR(45) NOT NULL,
-  RequestDate DATE NOT NULL,
-  CompletedDate DATE NOT NULL,
-  FOREIGN KEY (TenantID) REFERENCES Tenant(TenantID),
-  FOREIGN KEY (UnitID) REFERENCES Unit(UnitID)
-);
-
-CREATE TABLE ProspectiveTenantInterestedUnit(
-   P_TenantID INT NOT NULL
-	REFERENCES ProspectiveTenant(P_tenantID),
-   UnitID INT NOT NULL
-	REFERENCES Unit(UnitID),
-  CONSTRAINT PK_ProspectiveTenantInterestedUnit PRIMARY KEY CLUSTERED (P_TenantID, UnitID)
-);
-
-
-
 -- create TenantUnit table with a clustered primary key constraint
 CREATE TABLE TenantUnit(
 TenantID INT NOT NULL
          REFERENCES Tenant(TenantID),
-UnitID INT NOT NULL
-         REFERENCES Unit(UnitID),
-CONSTRAINT PK_TenantUnit PRIMARY KEY CLUSTERED (TenantID,UnitID)
+Unit_ID INT NOT NULL
+         REFERENCES Unit(Unit_ID),
+CONSTRAINT PK_TenantUnit PRIMARY KEY CLUSTERED (TenantID,Unit_ID)
 );
 
 
 
 INSERT INTO Unit
-	(BuildingID, UnitNo, Bedroom, Bathroom, Availability, SquareFootage)
+	(Building_ID, UnitNo, Bedroom, Bathroom, Availability, SquareFootage)
 VALUES
 	(1, 101, 1, 1, 'available', 500),
 	(1, 102, 2, 2, 'occupied', 1000),
@@ -218,23 +182,23 @@ VALUES
 
 
 
-INSERT INTO Utilities (UnitID, Gasbill, ElectricityBill, WaterBill, PaymentDate)
+	INSERT INTO Utilities (Unit_ID, Gasbill, ElectricityBill, WaterBill, TotalFee, PaymentDate)
 VALUES 
-	(1, 50.0, 25.0, 20.0, '2023-02-01'),
-	(2, 60.0, 30.0, 25.0, '2023-02-01'),
-	(3, 70.0, 35.0, 30.0, '2023-02-01'),
-	(4, 80.0, 40.0, 35.0, '2023-02-01'),
-	(5, 90.0, 45.0, 40.0, '2023-02-01'),
-	(6, 100.0, 50.0, 45.0, '2023-02-01'),
-	(7, 110.0, 55.0, 50.0, '2023-02-01'),
-	(8, 120.0, 60.0, 55.0, '2023-02-01'),
-	(9, 130.0, 65.0, 60.0, '2023-02-01'),
-	(10, 140.0, 70.0, 65.0, '2023-02-01'),
-	(11, 50.0, 25.0, 20.0, '2023-03-01'),
-	(12, 60.0, 30.0, 25.0, '2023-03-01'),
-	(13, 70.0, 35.0, 30.0, '2023-03-01'),
-	(14, 80.0, 40.0, 35.0, '2023-03-01'),
-	(15, 90.0, 45.0, 40.0, '2023-03-01');
+	(1, 50.0, 25.0, 20.0, 95.0, '2023-02-01'),
+	(2, 60.0, 30.0, 25.0, 115.0, '2023-02-01'),
+	(3, 70.0, 35.0, 30.0, 135.0, '2023-02-01'),
+	(4, 80.0, 40.0, 35.0, 155.0, '2023-02-01'),
+	(5, 90.0, 45.0, 40.0, 175.0, '2023-02-01'),
+	(6, 100.0, 50.0, 45.0, 195.0, '2023-02-01'),
+	(7, 110.0, 55.0, 50.0, 215.0, '2023-02-01'),
+	(8, 120.0, 60.0, 55.0, 235.0, '2023-02-01'),
+	(9, 130.0, 65.0, 60.0, 255.0, '2023-02-01'),
+	(10, 140.0, 70.0, 65.0, 275.0, '2023-02-01'),
+	(11, 50.0, 25.0, 20.0, 95.0, '2023-03-01'),
+	(12, 60.0, 30.0, 25.0, 115.0, '2023-03-01'),
+	(13, 70.0, 35.0, 30.0, 135.0, '2023-03-01'),
+	(14, 80.0, 40.0, 35.0, 155.0, '2023-03-01'),
+	(15, 90.0, 45.0, 40.0, 175.0, '2023-03-01');
 
 
 INSERT INTO Amenity(Building_ID, Amenity_Name, Amenity_Type, Cost)
@@ -249,7 +213,7 @@ VALUES (1, 'Swimming Pool', 'Recreational', 150.00),
        (7, 'Yoga Studio', 'Fitness', 80.00),
        (8, 'Game Room', 'Entertainment', 125.00);
        
-INSERT INTO Parking(UnitID, Fee, PaymentDate)
+INSERT INTO Parking(Unit_ID, Fee, PaymentDate)
 VALUES (1, 50.0, '2022-03-01'),
        (2, 25.0, '2022-03-02'),
        (3, 35.0, '2022-03-03'),
@@ -274,7 +238,7 @@ VALUES (1, 1, 'ABC Building', 'Office', 50, 10, '123-456-7890', 'abc@building.co
        (3, 3, 'VWX Building', 'Office', 125, 25, '777-111-4444', 'vwx@building.com');
 
 -- insert data into the Lease table
-INSERT INTO Lease (UnitID, TenantID, StartDate, EndDate, MonthlyRent, SecurityDeposit)
+INSERT INTO Lease (Unit_ID, TenantID, StartDate, EndDate, MonthlyRent, SecurityDeposit)
 VALUES (1, 1, '2022-01-01', '2023-01-01', 1000.00, 1000.00),
        (1, 2, '2022-02-01', '2023-02-01', 1200.00, 1200.00),
        (2, 3, '2022-03-01', '2023-03-01', 1500.00, 1500.00),
@@ -299,8 +263,6 @@ VALUES (1, 1000.00, '2022-01-01'),
        (7, 950.00, '2022-08-01'),
        (8, 1300.00, '2022-09-01');
 
-
-
 -- insert data into the Tenant table
 INSERT INTO Tenant (FirstName, LastName, PhoneNumber, Email)
 VALUES ('John', 'Doe', '555-1234', 'john.doe@email.com'),
@@ -313,29 +275,19 @@ VALUES ('John', 'Doe', '555-1234', 'john.doe@email.com'),
 
 
 
+
 -- insert data into Address table
 INSERT INTO Address (DetailedAddress, City, State, Zipcode)
-VALUES 
-	( '100 Main St.', 'Seattle', 'CA', 12345),
-      	( '200 Elm St.', 'Boston', 'NY', 54321),
-	( '300 Maple Ave.', 'Portland', 'TX', 67890),
-	( '400 Oak Rd.', 'NewYork', 'CA', 23456),
-	( '500 Pine St.', 'Seattle', 'NY', 65432),
-	( '600 Cedar Ln.', 'SF', 'TX', 78901),
-	( '700 Walnut Dr.', 'San Hose', 'CA', 34567),
-	( '800 Cherry St.', 'Olive', 'NY', 76543),
-	( '900 Birch Ave.', 'Angels', 'TX', 89012),
-	( '1000 Rose Blvd.', 'Dawn', 'CA', 45678),
-	('567 Cherry Lane', 'Miami', 'FL', 33130),
-	('890 Peachtree Street', 'Atlanta', 'GA', 30309),
-	('234 Cedar Avenue', 'Portland', 'OR', 97205),
-	('876 Oakwood Drive', 'San Francisco', 'CA', 94103),
-	('543 Birch Street', 'Philadelphia', 'PA', 19107),
-	('901 Magnolia Boulevard', 'New Orleans', 'LA', 70112),
-	('432 Walnut Avenue', 'Dallas', 'TX', 75202),
-	('765 Spruce Street', 'San Diego', 'CA', 92103),
-	('2100 Broad Street', 'Nashville', 'TN', 37212),
-	('987 Market Street', 'San Francisco', 'CA', 94103);
+VALUES ( 100 Main St', 'Seattle', 'CA', 12345),
+       ( '200 Elm St', 'Boston', 'NY', 54321),
+       ( '300 Maple Ave.', 'Portland', 'TX', 67890),
+       ( '400 Oak Rd.', 'NewYork', 'CA', 23456),
+       ( '500 Pine St.', 'Seattle', 'NY', 65432),
+       ( '600 Cedar Ln.', 'SF', 'TX', 78901),
+       ( '700 Walnut Dr.', 'San Hose', 'CA', 34567),
+       ( '800 Cherry St.', 'Olive', 'NY', 76543),
+       ( '900 Birch Ave.', 'Angels', 'TX', 89012),
+       ( '1000 Rose Blvd.', 'Dawn', 'CA', 45678);
 
 
 -- insert data into ManagementCompany table
@@ -371,95 +323,40 @@ VALUES
        
 INSERT INTO Address (Detailed_Address, City, State, ZipCode)
 VALUES 
-	('123 Main Street', 'New York', 'NY', 10001),
-	('456 Elm Street', 'Los Angeles', 'CA', 90012),
-	('789 Oak Street', 'Chicago', 'IL', 60611),
-	('987 Pine Street', 'Houston', 'TX', 77002),
-	('654 Maple Street', 'Seattle', 'WA', 98101),
-	('246 Broadway', 'Boston', 'MA', 02115),
-	('1350 15th Street', 'Denver', 'CO', 80202),
-	('3780 Wilshire Blvd', 'Los Angeles', 'CA', 90010),
-	('1600 Pennsylvania Ave NW', 'Washington', 'DC', 20500),
-	('3300 Las Vegas Blvd S', 'Las Vegas', 'NV', 89109),
-	('567 Cherry Lane', 'Miami', 'FL', 33130),
-	('890 Peachtree Street', 'Atlanta', 'GA', 30309),
-	('234 Cedar Avenue', 'Portland', 'OR', 97205),
-	('876 Oakwood Drive', 'San Francisco', 'CA', 94103),
-	('543 Birch Street', 'Philadelphia', 'PA', 19107),
-	('901 Magnolia Boulevard', 'New Orleans', 'LA', 70112),
-	('432 Walnut Avenue', 'Dallas', 'TX', 75202),
-	('765 Spruce Street', 'San Diego', 'CA', 92103),
-	('2100 Broad Street', 'Nashville', 'TN', 37212),
-	('987 Market Street', 'San Francisco', 'CA', 94103);
-
--- insert data into ProspectiveTenant
-Insert INTO ProspectiveTenant
-    (P_tenantID, FirstName, LastName, PhoneNumber, Email)
-VALUES (1, 'John', 'Smith', '(730) 729-4030', 'dbrobins@mac.com'),
-       (2, 'Greg', 'Bryant', '(915) 677-2427', 'lstaf@mac.com'),
-       (3, 'Kendra', 'Cox', '(502) 898-8806', 'granboul@verizon.net'),
-       (4, 'Grant', 'Mccoy', '(569) 741-2145', 'sharon@att.net'),
-       (5, 'Dan', 'Wood', '(588) 258-6550', 'birddog@verizon.net'),
-       (6, 'Lula', 'Arnold', '(233) 892-7015', 'melnik@live.com'),
-       (7, 'Andrew', 'Dixon', '(751) 346-5683', 'grady@live.com'),
-       (8, 'Gloria', 'Kennedy', '(912) 795-7161', 'gumpish@aol.com'),
-       (9, 'Clayton', 'Ward', '(323) 567-9962', 'frode@aol.com'),
-       (10, 'Alejandro', 'Dennis', '(610) 401-9660', 'pfitza@live.com');
-
---insert data into UnitMaintenanceRequest
-INSERT INTO UnitMaintenanceRequest
-    (RequestID, TenantID, UnitID, EmployeeID, Description, Status, RequestDate, CompletedDate)
-VALUES (1, 13, 25, 57, 'Ginger', 'short hair', '2023-05-09', '2023-06-05'),
-       (2, 15, 22, 58, 'tense face', 'blend seamlessly', '2023-07-13', '2023-06-05'),
-       (3, 17, 23, 53, 'blue eyes', 'freshly baked bread', '2023-06-06', '2023-09-05'),
-       (4, 20, 24, 64, 'set narrowly', 'majestic weeping willow', '2023-05-26', '2023-06-26'),
-       (5, 60, 20, 68, 'forgotten valley', 'gentle breeze', '2023-05-19', '2023-08-31'),
-       (6, 87, 44, 69, 'obblestone streets', 'local farmers', '2023-05-09', '2023-06-05'),
-       (7, 13, 33, 43, 'sweet aroma', 'sparkling river', '2023-10-13', '2023-11-21'),
-       (8, 38, 59, 41, 'symphony of progress', 'glow bathes', '2023-05-11', '2023-06-22'),
-       (9, 21, 47, 68, 'eart of Verivale', 'local tavern', '2023-08-11', '2023-09-21'),
-       (10, 16, 40, 31, 'casting dappled', 'enduring spirit ', '2023-04-19', '2023-06-13');
- 
- 
---insert data into EmployeeBuilding table
-INSERT INTO EmployeeBuilding (EmployeeID, BuildingID)
-VALUES 
-    (1, 10),
-    (2, 9),
-    (3, 8),
-    (4, 7),
-    (5, 6),
-    (6, 5),
-    (7, 4),
-    (8, 3),
-    (9, 2),
-    (10, 1);
-
+('123 Main Street', 'New York', 'NY', 10001),
+('456 Elm Street', 'Los Angeles', 'CA', 90012),
+('789 Oak Street', 'Chicago', 'IL', 60611),
+('987 Pine Street', 'Houston', 'TX', 77002),
+('654 Maple Street', 'Seattle', 'WA', 98101),
+('246 Broadway', 'Boston', 'MA', 02115),
+('1350 15th Street', 'Denver', 'CO', 80202),
+('3780 Wilshire Blvd', 'Los Angeles', 'CA', 90010),
+('1600 Pennsylvania Ave NW', 'Washington', 'DC', 20500),
+('3300 Las Vegas Blvd S', 'Las Vegas', 'NV', 89109);
+       
+       
        
 -- create a funtion used to create a computed column
 GO
 
-CREATE FUNCTION GetTotalParkingFee_Unit(@UnitID INT)
-RETURNS FLOAT(2)
+CREATE FUNCTION GetTotalParkingFee_Unit(@Unit_ID INT)
+RETURNS FLOAT(10,2)
 AS
 BEGIN
-    DECLARE @TotalPayment FLOAT(2)
+    DECLARE @TotalPayment FLOAT(10,2)
     SELECT  @TotalPayment = SUM(Fee) 
     FROM Parking
-    WHERE UnitID = @UnitID
+    WHERE Unit_ID = @Unit_ID
     RETURN @TotalPayment;
 END
 
 GO
 
-
 -- create a view to show the total parking payment for each unit
 
-CREATE VIEW unit_parkingfee AS(
-    SELECT DISTINCT UnitID, dbo.GetTotalParkingFee_Unit(UnitID) AS TotalParkingPayment, COUNT(UnitID) AS PaymentTimes
-    FROM Parking p
-    GROUP BY UnitID
-)
+CREATE VIEW unit_parkingfee AS
+SELECT DISTINCT Unit_ID, GetTotalParkingFee_Unit(Unit_ID) AS TotalParkingPayment, COUNT(Unit_ID) AS PaymentTimes
+FROM Parking p;
 
 SELECT * FROM unit_parkingfee;
 
