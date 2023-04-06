@@ -311,7 +311,7 @@ VALUES ('John', 'Doe', '555-1234', 'john.doe@email.com'),
        ('Sally', 'Johnson', '555-6543', 'sally.johnson@email.com'),
        ('Mike', 'Williams', '555-2345', 'mike.williams@email.com'),
        ('Karen', 'Davis', '555-4321', 'karen.davis@email.com'),
-       ('Tom', 'Brown', '555-8765', 'tom.brown);
+       ('Tom', 'Brown', '555-8765', 'tom.brown');
 
 
 
