@@ -539,3 +539,13 @@ ADD CONSTRAINT CK_Unit_SquareFootage CHECK (dbo.CheckSquareFootage(SquareFootage
 -- To test the function
 INSERT INTO Unit (BuildingID, UnitNo, Bedroom, Bathroom, Availability, SquareFootage)
 VALUES (1, 101, 2, 1.5, 'Available', 12.0);
+
+
+--  create view to see the units and maintenance req
+
+CREATE VIEW MaintenanceRequests
+AS
+SELECT r.RequestID, r.TenantID, r.UnitID, u.UnitNo, u.Availability, r.Description, r.Status, r.RequestDate, r.CompletedDate
+FROM UnitMaintenanceRequest r
+JOIN Unit u ON r.UnitID = u.UnitID;
+-- SELECT * FROM MaintenanceRequests;
