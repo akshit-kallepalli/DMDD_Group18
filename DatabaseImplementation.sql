@@ -440,10 +440,10 @@ VALUES
 GO
 
 CREATE FUNCTION GetTotalParkingFee_Unit(@UnitID INT)
-RETURNS FLOAT(10,2)
+RETURNS FLOAT(2)
 AS
 BEGIN
-    DECLARE @TotalPayment FLOAT(10,2)
+    DECLARE @TotalPayment FLOAT(2)
     SELECT  @TotalPayment = SUM(Fee) 
     FROM Parking
     WHERE UnitID = @UnitID
@@ -452,11 +452,14 @@ END
 
 GO
 
+
 -- create a view to show the total parking payment for each unit
 
-CREATE VIEW unit_parkingfee AS
-SELECT DISTINCT UnitID, GetTotalParkingFee_Unit(UnitID) AS TotalParkingPayment, COUNT(UnitID) AS PaymentTimes
-FROM Parking p;
+CREATE VIEW unit_parkingfee AS(
+    SELECT DISTINCT UnitID, dbo.GetTotalParkingFee_Unit(UnitID) AS TotalParkingPayment, COUNT(UnitID) AS PaymentTimes
+    FROM Parking p
+    GROUP BY UnitID
+)
 
 SELECT * FROM unit_parkingfee;
 
