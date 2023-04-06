@@ -549,3 +549,23 @@ SELECT r.RequestID, r.TenantID, r.UnitID, u.UnitNo, u.Availability, r.Descriptio
 FROM UnitMaintenanceRequest r
 JOIN Unit u ON r.UnitID = u.UnitID;
 -- SELECT * FROM MaintenanceRequests;
+
+
+
+-- View for prospective tenants to view all the available units
+
+CREATE VIEW AvailableUnits AS
+SELECT 
+  Building.Building_Name,
+  Building.Building_Type,
+  Unit.UnitNo,
+  Unit.Bedroom,
+  Unit.Bathroom,
+  Unit.SquareFootage,
+  Unit.Availability
+FROM 
+  Building
+  INNER JOIN Unit ON Building.Building_ID = Unit.BuildingID
+  LEFT JOIN Amenity ON Building.Building_ID = Amenity.Building_ID
+WHERE 
+  Unit.Availability = 'Available'
