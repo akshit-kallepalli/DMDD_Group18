@@ -3,13 +3,13 @@
 -- create Lease table
 CREATE TABLE Lease (
   LeaseID INT IDENTITY PRIMARY KEY,
-  Unit_ID INT NOT NULL,
+  UnitID INT NOT NULL,
   TenantID INT NOT NULL,
   StartDate DATE NOT NULL,
   EndDate DATE NOT NULL,
   MonthlyRent DECIMAL(10,2) NOT NULL,
   SecurityDeposit DECIMAL(10,2) NOT NULL,
-  FOREIGN KEY (Unit_ID) REFERENCES Unit(Unit_ID),
+  FOREIGN KEY (UnitID) REFERENCES Unit(UnitID),
   FOREIGN KEY (TenantID) REFERENCES Tenant(TenantID)
 );
 
@@ -68,9 +68,9 @@ CREATE TABLE Employee (
 CREATE TABLE EmployeeBuilding(
   EmployeeID INT NOT NULL
 	REFERENCES Employee(EmployeeID),
-  Building_ID INT NOT NULL
-	REFERENCES Building(Building_ID),
-  CONSTRAINT PK_EmployeeBuilding PRIMARY KEY CLUSTERED (EmployeeID, Building_ID)
+  BuildingID INT NOT NULL
+	REFERENCES Building(BuildingID),
+  CONSTRAINT PK_EmployeeBuilding PRIMARY KEY CLUSTERED (EmployeeID, BuildingID)
 );
 
 -- create table adddress
@@ -83,7 +83,7 @@ CREATE TABLE Address(
 );
 
 CREATE TABLE Building (
-  Building_ID INT IDENTITY(1,1) PRIMARY KEY,
+  BuildingID INT IDENTITY(1,1) PRIMARY KEY,
   AddressID INT FOREIGN KEY REFERENCES Address(AddressID),
   CompanyID INT FOREIGN KEY REFERENCES ManagementCompany(CompanyID),
   Building_Name VARCHAR(255),
@@ -96,14 +96,14 @@ CREATE TABLE Building (
 
 CREATE TABLE Parking(
    Parking_ID INT IDENTITY(1,1) PRIMARY KEY,
-   Unit_ID INT FOREIGN KEY REFERENCES Unit(Unit_ID),
+   UnitID INT FOREIGN KEY REFERENCES Unit(UnitID),
    Fee FLOAT,
    PaymentDate DATE
 );
 
 CREATE TABLE Amenity (
   Amenity_ID INT IDENTITY(1,1) PRIMARY KEY,
-  Building_ID INT FOREIGN KEY REFERENCES Building(Building_ID),
+  BuildingID INT FOREIGN KEY REFERENCES Building(BuildingID),
   Amenity_Name VARCHAR(255),
   Amenity_Type VARCHAR(255),
   Cost FLOAT
@@ -113,28 +113,28 @@ CREATE TABLE Amenity (
 
 --create table unit
 CREATE TABLE Unit(
-Unit_ID INT IDENTITY PRIMARY KEY,
-Building_ID INT NOT NULL,
+UnitID INT IDENTITY PRIMARY KEY,
+BuildingID INT NOT NULL,
 UnitNo INT NOT NULL,
 Bedroom INT NOT NULL,
 Bathroom FLOAT NOT NULL,
 Availability VARCHAR(45) NOT NULL,
 SquareFootage float NOT NULL,
-FOREIGN KEY (Building_ID) REFERENCES Building(Building_ID)
+FOREIGN KEY (BuildingID) REFERENCES Building(BuildingID)
 );
 
 
 --create table utilities
 CREATE TABLE Utilities(
 UtilitiesID INT IDENTITY PRIMARY KEY,
-Unit_ID INT NOT NULL,
+UnitID INT NOT NULL,
 Gasbill FLOAT NOT NULL,
 ElectricityBill FLOAT NOT NULL,
 WaterBill FLOAT NOT NULL,
 --computed column	
 TotalFee AS CalculateTotalFee(Gasbill, ElectricityBill, WaterBill),
 PaymentDate DATE NOT NULL,
-FOREIGN KEY (Unit_ID) REFERENCES Unit(Unit_ID)
+FOREIGN KEY (UnitID) REFERENCES Unit(UnitID)
 );
 
 
@@ -156,15 +156,15 @@ GO
 CREATE TABLE TenantUnit(
 TenantID INT NOT NULL
          REFERENCES Tenant(TenantID),
-Unit_ID INT NOT NULL
-         REFERENCES Unit(Unit_ID),
-CONSTRAINT PK_TenantUnit PRIMARY KEY CLUSTERED (TenantID,Unit_ID)
+UnitID INT NOT NULL
+         REFERENCES Unit(UnitID),
+CONSTRAINT PK_TenantUnit PRIMARY KEY CLUSTERED (TenantID,UnitID)
 );
 
 -- DATA INSERTION
 
 INSERT INTO Unit
-	(Building_ID, UnitNo, Bedroom, Bathroom, Availability, SquareFootage)
+	(BuildingID, UnitNo, Bedroom, Bathroom, Availability, SquareFootage)
 VALUES
 	(1, 101, 1, 1, 'available', 500),
 	(1, 102, 2, 2, 'occupied', 1000),
@@ -184,7 +184,7 @@ VALUES
 
 
 
-	INSERT INTO Utilities (Unit_ID, Gasbill, ElectricityBill, WaterBill, TotalFee, PaymentDate)
+	INSERT INTO Utilities (UnitID, Gasbill, ElectricityBill, WaterBill, TotalFee, PaymentDate)
 VALUES 
 	(1, 50.0, 25.0, 20.0, 95.0, '2023-02-01'),
 	(2, 60.0, 30.0, 25.0, 115.0, '2023-02-01'),
@@ -203,7 +203,7 @@ VALUES
 	(15, 90.0, 45.0, 40.0, 175.0, '2023-03-01');
 
 
-INSERT INTO Amenity(Building_ID, Amenity_Name, Amenity_Type, Cost)
+INSERT INTO Amenity(BuildingID, Amenity_Name, Amenity_Type, Cost)
 VALUES (1, 'Swimming Pool', 'Recreational', 150.00),
        (1, 'Gym', 'Fitness', 100.00),
        (2, 'Tennis Court', 'Recreational', 50.00),
@@ -215,7 +215,7 @@ VALUES (1, 'Swimming Pool', 'Recreational', 150.00),
        (7, 'Yoga Studio', 'Fitness', 80.00),
        (8, 'Game Room', 'Entertainment', 125.00);
        
-INSERT INTO Parking(Unit_ID, Fee, PaymentDate)
+INSERT INTO Parking(UnitID, Fee, PaymentDate)
 VALUES (1, 50.0, '2022-03-01'),
        (2, 25.0, '2022-03-02'),
        (3, 35.0, '2022-03-03'),
@@ -240,7 +240,7 @@ VALUES (1, 1, 'ABC Building', 'Office', 50, 10, '123-456-7890', 'abc@building.co
        (3, 3, 'VWX Building', 'Office', 125, 25, '777-111-4444', 'vwx@building.com');
 
 -- insert data into the Lease table
-INSERT INTO Lease (Unit_ID, TenantID, StartDate, EndDate, MonthlyRent, SecurityDeposit)
+INSERT INTO Lease (UnitID, TenantID, StartDate, EndDate, MonthlyRent, SecurityDeposit)
 VALUES (1, 1, '2022-01-01', '2023-01-01', 1000.00, 1000.00),
        (1, 2, '2022-02-01', '2023-02-01', 1200.00, 1200.00),
        (2, 3, '2022-03-01', '2023-03-01', 1500.00, 1500.00),
@@ -341,14 +341,14 @@ VALUES
 -- create a funtion used to create a computed column
 GO
 
-CREATE FUNCTION GetTotalParkingFee_Unit(@Unit_ID INT)
+CREATE FUNCTION GetTotalParkingFee_Unit(@UnitID INT)
 RETURNS FLOAT(10,2)
 AS
 BEGIN
     DECLARE @TotalPayment FLOAT(10,2)
     SELECT  @TotalPayment = SUM(Fee) 
     FROM Parking
-    WHERE Unit_ID = @Unit_ID
+    WHERE UnitID = @UnitID
     RETURN @TotalPayment;
 END
 
@@ -357,7 +357,7 @@ GO
 -- create a view to show the total parking payment for each unit
 
 CREATE VIEW unit_parkingfee AS
-SELECT DISTINCT Unit_ID, GetTotalParkingFee_Unit(Unit_ID) AS TotalParkingPayment, COUNT(Unit_ID) AS PaymentTimes
+SELECT DISTINCT UnitID, GetTotalParkingFee_Unit(UnitID) AS TotalParkingPayment, COUNT(UnitID) AS PaymentTimes
 FROM Parking p;
 
 SELECT * FROM unit_parkingfee;
