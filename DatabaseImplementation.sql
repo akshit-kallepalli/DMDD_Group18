@@ -440,6 +440,19 @@ INSERT INTO TenantUnit (TenantID, UnitID) VALUES
 (9, 15),
 (10, 11);
 
+INSERT INTO ProspectiveTenantInterestedUnit (P_TenantID, UnitID) VALUES
+(1, 9),
+(1, 8),
+(2, 6),
+(3, 9),
+(4, 4),
+(5,3),
+(6, 7),
+(7, 8),
+(8, 9),
+(9, 10);
+
+
        
 -- create a funtion used to create a computed column
 GO
