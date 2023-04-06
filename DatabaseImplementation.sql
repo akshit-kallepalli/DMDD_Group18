@@ -1,3 +1,5 @@
+--TABLES CREATION
+
 -- create Lease table
 CREATE TABLE Lease (
   LeaseID INT IDENTITY PRIMARY KEY,
@@ -159,7 +161,7 @@ Unit_ID INT NOT NULL
 CONSTRAINT PK_TenantUnit PRIMARY KEY CLUSTERED (TenantID,Unit_ID)
 );
 
-
+-- DATA INSERTION
 
 INSERT INTO Unit
 	(Building_ID, UnitNo, Bedroom, Bathroom, Availability, SquareFootage)
@@ -360,4 +362,80 @@ FROM Parking p;
 
 SELECT * FROM unit_parkingfee;
 
+
+
+-- Table-level CHECK Constraints based on a function
+
+-- Function to check if end date is after start date on the lease
+CREATE FUNCTION CheckLeaseDates
+(
+	@StartDate DATE,
+	@EndDate DATE
+)
+RETURNS BIT
+AS
+BEGIN
+	DECLARE @Result BIT
+
+	IF @EndDate >= @StartDate
+		SET @Result = 1
+	ELSE
+		SET @Result = 0
+
+	RETURN @Result
+END
+
+-- Alter the lease table to include the table level check constraint based on the function
+ALTER TABLE Lease 
+ADD CONSTRAINT CHK_LeaseDates CHECK (dbo.CheckLeaseDates(StartDate, EndDate) = 1);
+
+-- To test the function
+INSERT INTO Lease (UnitID, TenantID, StartDate, EndDate, MonthlyRent, SecurityDeposit)
+VALUES (1, 2, '2023-04-01', '2022-03-31', 1200.00, 1000.00);
+
+
+-- Function to validate zipcodes
+CREATE FUNCTION dbo.validate_zipcode(@zipcode VARCHAR(10))
+RETURNS BIT
+AS
+BEGIN
+    DECLARE @result BIT
+    SET @result = 0
+
+    IF @zipcode LIKE '[0-9][0-9][0-9][0-9][0-9]' 
+        SET @result = 1
+
+    RETURN @result
+END
+GO
+
+-- Alter the address table to include the table level check constraint based on the function
+ALTER TABLE address
+ADD CONSTRAINT chk_zipcode CHECK (dbo.validate_zipcode(zipcode) = 1);
+
+-- To test the function
+INSERT INTO Address (DetailedAddress, City, State, Zipcode)
+VALUES ('123 Main St', 'Anytown', 'CA', 123456);
+
+
+-- Function to check square footage
+CREATE FUNCTION CheckSquareFootage (@squareFootage FLOAT)
+RETURNS BIT
+AS
+BEGIN
+    DECLARE @result BIT
+    IF (@squareFootage >= 100)
+        SET @result = 1
+    ELSE
+        SET @result = 0
+    RETURN @result
+END
+
+-- Alter the unit table to include the table level check constraint based on the function
+ALTER TABLE Unit
+ADD CONSTRAINT CK_Unit_SquareFootage CHECK (dbo.CheckSquareFootage(SquareFootage) = 1);
+
+-- To test the function
+INSERT INTO Unit (BuildingID, UnitNo, Bedroom, Bathroom, Availability, SquareFootage)
+VALUES (1, 101, 2, 1.5, 'Available', 12.0);
 
