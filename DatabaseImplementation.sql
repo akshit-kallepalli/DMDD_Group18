@@ -370,30 +370,8 @@ VALUES
        (18, 4, 'Katie', 'Brown', 'Maintenance Staff', 5550123, 'katie.brown@example.com'),
        (19, 5, 'Joe', 'Gray', 'Manager', 5554567, 'joe.gray@example.com'),
        (20, 5, 'Amy', 'Taylor', 'Maintenance Staff', 5558901, 'amy.taylor@example.com');
-       
-INSERT INTO Address (Detailed_Address, City, State, ZipCode)
-VALUES 
-	('123 Main Street', 'New York', 'NY', 10001),
-	('456 Elm Street', 'Los Angeles', 'CA', 90012),
-	('789 Oak Street', 'Chicago', 'IL', 60611),
-	('987 Pine Street', 'Houston', 'TX', 77002),
-	('654 Maple Street', 'Seattle', 'WA', 98101),
-	('246 Broadway', 'Boston', 'MA', 02115),
-	('1350 15th Street', 'Denver', 'CO', 80202),
-	('3780 Wilshire Blvd', 'Los Angeles', 'CA', 90010),
-	('1600 Pennsylvania Ave NW', 'Washington', 'DC', 20500),
-	('3300 Las Vegas Blvd S', 'Las Vegas', 'NV', 89109),
-	('567 Cherry Lane', 'Miami', 'FL', 33130),
-	('890 Peachtree Street', 'Atlanta', 'GA', 30309),
-	('234 Cedar Avenue', 'Portland', 'OR', 97205),
-	('876 Oakwood Drive', 'San Francisco', 'CA', 94103),
-	('543 Birch Street', 'Philadelphia', 'PA', 19107),
-	('901 Magnolia Boulevard', 'New Orleans', 'LA', 70112),
-	('432 Walnut Avenue', 'Dallas', 'TX', 75202),
-	('765 Spruce Street', 'San Diego', 'CA', 92103),
-	('2100 Broad Street', 'Nashville', 'TN', 37212),
-	('987 Market Street', 'San Francisco', 'CA', 94103);
 
+	
 -- insert data into ProspectiveTenant
 Insert INTO ProspectiveTenant
     (P_tenantID, FirstName, LastName, PhoneNumber, Email)
