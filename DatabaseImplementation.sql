@@ -55,7 +55,7 @@ CREATE TABLE Employee (
   CompanyID INT NOT NULL,
   FirstName VARCHAR(25) NOT NULL,
   LastName VARCHAR(25) NOT NULL,
-  Type VARCHAR(15) NOT NULL,
+  Type VARCHAR(30) NOT NULL,
   PhoneNumber INT NOT NULL,
   Email VARCHAR(45) NOT NULL,
   FOREIGN KEY (AddressID) REFERENCES Address(AddressID),
@@ -94,7 +94,7 @@ CREATE TABLE Building (
 
 CREATE TABLE Parking(
    Parking_ID INT IDENTITY(1,1) PRIMARY KEY,
-   UnitID INT FOREIGN KEY REFERENCES Unit(UnitID),
+   Unit_ID INT FOREIGN KEY REFERENCES Unit(Unit_ID),
    Fee FLOAT,
    PaymentDate DATE
 );
@@ -118,7 +118,7 @@ Bedroom INT NOT NULL,
 Bathroom FLOAT NOT NULL,
 Availability VARCHAR(45) NOT NULL,
 SquareFootage float NOT NULL,
-FOREIGN KEY (BuildingID) REFERENCES Building(Building_ID)
+FOREIGN KEY (BuildingID) REFERENCES Building(BuildingID)
 );
 
 
@@ -296,36 +296,43 @@ VALUES (1, 1000.00, '2022-01-01'),
        (7, 950.00, '2022-08-01'),
        (8, 1300.00, '2022-09-01');
 
+
+
 -- insert data into the Tenant table
 INSERT INTO Tenant (FirstName, LastName, PhoneNumber, Email)
-VALUES
-('John', 'Doe', '123-456-7890', 'john.doe@gmail.com'),
-('Jane', 'Doe', '234-567-8901', 'jane.doe@gmail.com'),
-('Bob', 'Smith', '345-678-9012', 'bob.smith@gmail.com'),
-('Alice', 'Johnson', '456-789-0123', 'alice.johnson@gmail.com'),
-('Mark', 'Taylor', '567-890-1234', 'mark.taylor@gmail.com'),
-('Sara', 'Lee', '678-901-2345', 'sara.lee@gmail.com'),
-('Tom', 'Johnson', '789-012-3456', 'tom.johnson@gmail.com'),
-('Emily', 'Davis', '890-123-4567', 'emily.davis@gmail.com'),
-('David', 'Jones', '901-234-5678', 'david.jones@gmail.com'),
-('Jessica', 'Wilson', '012-345-6789', 'jessica.wilson@gmail.com');
-
-
+VALUES ('John', 'Doe', '555-1234', 'john.doe@email.com'),
+       ('Jane', 'Doe', '555-5678', 'jane.doe@email.com'),
+       ('Bob', 'Smith', '555-9876', 'bob.smith@email.com'),
+       ('Sally', 'Johnson', '555-6543', 'sally.johnson@email.com'),
+       ('Mike', 'Williams', '555-2345', 'mike.williams@email.com'),
+       ('Karen', 'Davis', '555-4321', 'karen.davis@email.com'),
+       ('Tom', 'Brown', '555-8765', 'tom.brown);
 
 
 
 -- insert data into Address table
 INSERT INTO Address (DetailedAddress, City, State, Zipcode)
-VALUES ( '100 Main St.', 'Seattle', 'CA', 12345),
-       ( '200 Elm St.', 'Boston', 'NY', 54321),
-       ( '300 Maple Ave.', 'Portland', 'TX', 67890),
-       ( '400 Oak Rd.', 'NewYork', 'CA', 23456),
-       ( '500 Pine St.', 'Seattle', 'NY', 65432),
-       ( '600 Cedar Ln.', 'SF', 'TX', 78901),
-       ( '700 Walnut Dr.', 'San Hose', 'CA', 34567),
-       ( '800 Cherry St.', 'Olive', 'NY', 76543),
-       ( '900 Birch Ave.', 'Angels', 'TX', 89012),
-       ( '1000 Rose Blvd.', 'Dawn', 'CA', 45678);
+VALUES 
+	( '100 Main St.', 'Seattle', 'CA', 12345),
+      	( '200 Elm St.', 'Boston', 'NY', 54321),
+	( '300 Maple Ave.', 'Portland', 'TX', 67890),
+	( '400 Oak Rd.', 'NewYork', 'CA', 23456),
+	( '500 Pine St.', 'Seattle', 'NY', 65432),
+	( '600 Cedar Ln.', 'SF', 'TX', 78901),
+	( '700 Walnut Dr.', 'San Hose', 'CA', 34567),
+	( '800 Cherry St.', 'Olive', 'NY', 76543),
+	( '900 Birch Ave.', 'Angels', 'TX', 89012),
+	( '1000 Rose Blvd.', 'Dawn', 'CA', 45678),
+	('567 Cherry Lane', 'Miami', 'FL', 33130),
+	('890 Peachtree Street', 'Atlanta', 'GA', 30309),
+	('234 Cedar Avenue', 'Portland', 'OR', 97205),
+	('876 Oakwood Drive', 'San Francisco', 'CA', 94103),
+	('543 Birch Street', 'Philadelphia', 'PA', 19107),
+	('901 Magnolia Boulevard', 'New Orleans', 'LA', 70112),
+	('432 Walnut Avenue', 'Dallas', 'TX', 75202),
+	('765 Spruce Street', 'San Diego', 'CA', 92103),
+	('2100 Broad Street', 'Nashville', 'TN', 37212),
+	('987 Market Street', 'San Francisco', 'CA', 94103);
 
 
 -- insert data into ManagementCompany table
@@ -361,16 +368,26 @@ VALUES
        
 INSERT INTO Address (Detailed_Address, City, State, ZipCode)
 VALUES 
-('123 Main Street', 'New York', 'NY', 10001),
-('456 Elm Street', 'Los Angeles', 'CA', 90012),
-('789 Oak Street', 'Chicago', 'IL', 60611),
-('987 Pine Street', 'Houston', 'TX', 77002),
-('654 Maple Street', 'Seattle', 'WA', 98101),
-('246 Broadway', 'Boston', 'MA', 02115),
-('1350 15th Street', 'Denver', 'CO', 80202),
-('3780 Wilshire Blvd', 'Los Angeles', 'CA', 90010),
-('1600 Pennsylvania Ave NW', 'Washington', 'DC', 20500),
-('3300 Las Vegas Blvd S', 'Las Vegas', 'NV', 89109);
+	('123 Main Street', 'New York', 'NY', 10001),
+	('456 Elm Street', 'Los Angeles', 'CA', 90012),
+	('789 Oak Street', 'Chicago', 'IL', 60611),
+	('987 Pine Street', 'Houston', 'TX', 77002),
+	('654 Maple Street', 'Seattle', 'WA', 98101),
+	('246 Broadway', 'Boston', 'MA', 02115),
+	('1350 15th Street', 'Denver', 'CO', 80202),
+	('3780 Wilshire Blvd', 'Los Angeles', 'CA', 90010),
+	('1600 Pennsylvania Ave NW', 'Washington', 'DC', 20500),
+	('3300 Las Vegas Blvd S', 'Las Vegas', 'NV', 89109),
+	('567 Cherry Lane', 'Miami', 'FL', 33130),
+	('890 Peachtree Street', 'Atlanta', 'GA', 30309),
+	('234 Cedar Avenue', 'Portland', 'OR', 97205),
+	('876 Oakwood Drive', 'San Francisco', 'CA', 94103),
+	('543 Birch Street', 'Philadelphia', 'PA', 19107),
+	('901 Magnolia Boulevard', 'New Orleans', 'LA', 70112),
+	('432 Walnut Avenue', 'Dallas', 'TX', 75202),
+	('765 Spruce Street', 'San Diego', 'CA', 92103),
+	('2100 Broad Street', 'Nashville', 'TN', 37212),
+	('987 Market Street', 'San Francisco', 'CA', 94103);
 
 -- insert data into ProspectiveTenant
 Insert INTO ProspectiveTenant
@@ -387,24 +404,34 @@ VALUES (1, 'John', 'Smith', '(730) 729-4030', 'dbrobins@mac.com'),
        (10, 'Alejandro', 'Dennis', '(610) 401-9660', 'pfitza@live.com');
 
 --insert data into UnitMaintenanceRequest
+INSERT INTO UnitMaintenanceRequest
+    (RequestID, TenantID, UnitID, EmployeeID, Description, Status, RequestDate, CompletedDate)
+VALUES (1, 13, 25, 57, 'Ginger', 'short hair', '2023-05-09', '2023-06-05'),
+       (2, 15, 22, 58, 'tense face', 'blend seamlessly', '2023-07-13', '2023-06-05'),
+       (3, 17, 23, 53, 'blue eyes', 'freshly baked bread', '2023-06-06', '2023-09-05'),
+       (4, 20, 24, 64, 'set narrowly', 'majestic weeping willow', '2023-05-26', '2023-06-26'),
+       (5, 60, 20, 68, 'forgotten valley', 'gentle breeze', '2023-05-19', '2023-08-31'),
+       (6, 87, 44, 69, 'obblestone streets', 'local farmers', '2023-05-09', '2023-06-05'),
+       (7, 13, 33, 43, 'sweet aroma', 'sparkling river', '2023-10-13', '2023-11-21'),
+       (8, 38, 59, 41, 'symphony of progress', 'glow bathes', '2023-05-11', '2023-06-22'),
+       (9, 21, 47, 68, 'eart of Verivale', 'local tavern', '2023-08-11', '2023-09-21'),
+       (10, 16, 40, 31, 'casting dappled', 'enduring spirit ', '2023-04-19', '2023-06-13');
+ 
+ 
+--insert data into EmployeeBuilding table
+INSERT INTO EmployeeBuilding (EmployeeID, BuildingID)
+VALUES 
+    (1, 10),
+    (2, 9),
+    (3, 8),
+    (4, 7),
+    (5, 6),
+    (6, 5),
+    (7, 4),
+    (8, 3),
+    (9, 2),
+    (10, 1);
 
--- Assuming TenantID 1 and UnitID 1 exist in their respective tables
-INSERT INTO UnitMaintenanceRequest (TenantID, UnitID, EmployeeID, Description, Status, RequestDate, CompletedDate)
-VALUES
-(1, 1, 123, 'Leaky faucet', 'Open', '2023-03-01', '2023-03-05'),
-(2, 2, 234, 'Broken toilet', 'Open', '2023-03-02', '2023-03-06'),
-(3, 1, 345, 'Clogged drain', 'Open', '2023-03-03', '2023-03-07'),
-(4, 3, 456, 'Faulty light switch', 'Open', '2023-03-04', '2023-03-08'),
-(5, 2, 567, 'No hot water', 'Open', '2023-03-05', '2023-03-09'),
-(6, 3, 678, 'Leaking ceiling', 'Open', '2023-03-06', '2023-03-10'),
-(7, 1, 789, 'Loud HVAC unit', 'Open', '2023-03-07', '2023-03-11'),
-(8, 2, 890, 'Bathroom sink not draining', 'Open', '2023-03-08', '2023-03-12'),
-(9, 3, 901, 'Damaged window', 'Open', '2023-03-09', '2023-03-13'),
-(10, 1, 012, 'Appliance not working', 'Open', '2023-03-10', '2023-03-14');
-
-
-       
-       
        
 -- create a funtion used to create a computed column
 GO
@@ -422,11 +449,12 @@ END
 
 GO
 
---  create view to see the units and maintenance req
+-- create a view to show the total parking payment for each unit
 
-CREATE VIEW MaintenanceRequests
-AS
-SELECT r.RequestID, r.TenantID, r.UnitID, u.UnitNo, u.Availability, r.Description, r.Status, r.RequestDate, r.CompletedDate
-FROM UnitMaintenanceRequest r
-JOIN Unit u ON r.UnitID = u.UnitID;
--- SELECT * FROM MaintenanceRequests;
+CREATE VIEW unit_parkingfee AS
+SELECT DISTINCT UnitID, GetTotalParkingFee_Unit(UnitID) AS TotalParkingPayment, COUNT(UnitID) AS PaymentTimes
+FROM Parking p;
+
+SELECT * FROM unit_parkingfee;
+
+
