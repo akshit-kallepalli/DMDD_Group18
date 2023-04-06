@@ -397,30 +397,30 @@ VALUES
 -- insert data into ProspectiveTenant
 Insert INTO ProspectiveTenant
     (P_tenantID, FirstName, LastName, PhoneNumber, Email)
-VALUES (1, 'John', 'Smith', '(730) 729-4030', 'dbrobins@mac.com'),
-       (2, 'Greg', 'Bryant', '(915) 677-2427', 'lstaf@mac.com'),
-       (3, 'Kendra', 'Cox', '(502) 898-8806', 'granboul@verizon.net'),
-       (4, 'Grant', 'Mccoy', '(569) 741-2145', 'sharon@att.net'),
-       (5, 'Dan', 'Wood', '(588) 258-6550', 'birddog@verizon.net'),
-       (6, 'Lula', 'Arnold', '(233) 892-7015', 'melnik@live.com'),
-       (7, 'Andrew', 'Dixon', '(751) 346-5683', 'grady@live.com'),
-       (8, 'Gloria', 'Kennedy', '(912) 795-7161', 'gumpish@aol.com'),
-       (9, 'Clayton', 'Ward', '(323) 567-9962', 'frode@aol.com'),
-       (10, 'Alejandro', 'Dennis', '(610) 401-9660', 'pfitza@live.com');
+VALUES ('John', 'Smith', '(730) 729-4030', 'dbrobins@mac.com'),
+       ('Greg', 'Bryant', '(915) 677-2427', 'lstaf@mac.com'),
+       ('Kendra', 'Cox', '(502) 898-8806', 'granboul@verizon.net'),
+       ('Grant', 'Mccoy', '(569) 741-2145', 'sharon@att.net'),
+       ('Dan', 'Wood', '(588) 258-6550', 'birddog@verizon.net'),
+       ('Lula', 'Arnold', '(233) 892-7015', 'melnik@live.com'),
+       ('Andrew', 'Dixon', '(751) 346-5683', 'grady@live.com'),
+       ('Gloria', 'Kennedy', '(912) 795-7161', 'gumpish@aol.com'),
+       ('Clayton', 'Ward', '(323) 567-9962', 'frode@aol.com'),
+       ('Alejandro', 'Dennis', '(610) 401-9660', 'pfitza@live.com');
 
 --insert data into UnitMaintenanceRequest
 INSERT INTO UnitMaintenanceRequest
-    (RequestID, TenantID, UnitID, EmployeeID, Description, Status, RequestDate, CompletedDate)
-VALUES (1, 13, 25, 57, 'Ginger', 'short hair', '2023-05-09', '2023-06-05'),
-       (2, 15, 22, 58, 'tense face', 'blend seamlessly', '2023-07-13', '2023-06-05'),
-       (3, 17, 23, 53, 'blue eyes', 'freshly baked bread', '2023-06-06', '2023-09-05'),
-       (4, 20, 24, 64, 'set narrowly', 'majestic weeping willow', '2023-05-26', '2023-06-26'),
-       (5, 60, 20, 68, 'forgotten valley', 'gentle breeze', '2023-05-19', '2023-08-31'),
-       (6, 87, 44, 69, 'obblestone streets', 'local farmers', '2023-05-09', '2023-06-05'),
-       (7, 13, 33, 43, 'sweet aroma', 'sparkling river', '2023-10-13', '2023-11-21'),
-       (8, 38, 59, 41, 'symphony of progress', 'glow bathes', '2023-05-11', '2023-06-22'),
-       (9, 21, 47, 68, 'eart of Verivale', 'local tavern', '2023-08-11', '2023-09-21'),
-       (10, 16, 40, 31, 'casting dappled', 'enduring spirit ', '2023-04-19', '2023-06-13');
+    (TenantID, UnitID, EmployeeID, Description, Status, RequestDate, CompletedDate)
+VALUES (13, 25, 57, 'Ginger', 'short hair', '2023-05-09', '2023-06-05'),
+       (15, 22, 58, 'tense face', 'blend seamlessly', '2023-07-13', '2023-06-05'),
+       (17, 23, 53, 'blue eyes', 'freshly baked bread', '2023-06-06', '2023-09-05'),
+       (20, 24, 64, 'set narrowly', 'majestic weeping willow', '2023-05-26', '2023-06-26'),
+       (60, 20, 68, 'forgotten valley', 'gentle breeze', '2023-05-19', '2023-08-31'),
+       (87, 44, 69, 'obblestone streets', 'local farmers', '2023-05-09', '2023-06-05'),
+       (13, 33, 43, 'sweet aroma', 'sparkling river', '2023-10-13', '2023-11-21'),
+       (38, 59, 41, 'symphony of progress', 'glow bathes', '2023-05-11', '2023-06-22'),
+       (21, 47, 68, 'eart of Verivale', 'local tavern', '2023-08-11', '2023-09-21'),
+       (16, 40, 31, 'casting dappled', 'enduring spirit ', '2023-04-19', '2023-06-13');
  
  
 --insert data into EmployeeBuilding table
