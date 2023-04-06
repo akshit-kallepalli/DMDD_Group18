@@ -414,6 +414,31 @@ VALUES
     (8, 3),
     (9, 2),
     (10, 1);
+    
+INSERT INTO Lease_Tenant (LeaseID, TenantID) VALUES
+(3, 1),
+(6, 2),
+(7, 3),
+(8, 4),
+(9, 5),
+(10, 6),
+(11, 7),
+(12, 8),
+(13, 9),
+(20, 10);
+
+
+INSERT INTO TenantUnit (TenantID, UnitID) VALUES
+(1, 1),
+(2, 3),
+(3, 5),
+(4, 6),
+(5, 7),
+(6, 9),
+(7, 12),
+(8, 14),
+(9, 15),
+(10, 11);
 
        
 -- create a funtion used to create a computed column
