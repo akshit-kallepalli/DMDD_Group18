@@ -122,6 +122,22 @@ FOREIGN KEY (BuildingID) REFERENCES Building(BuildingID)
 );
 
 
+
+-- It should be put before "create table utilities"
+-- The function used to create a computed column in Utilities Table
+GO
+
+CREATE FUNCTION CalculateTotalFee(@gas_bill FLOAT, @electricity_bill FLOAT, @water_bill FLOAT)
+RETURNS FLOAT
+AS
+BEGIN
+    DECLARE @TotalFee FLOAT;
+    SET @TotalPayment =  @gas_bill + @electricity_bill + @water_bill
+    RETURN @TotalPayment;
+END
+
+GO
+
 --create table utilities
 CREATE TABLE Utilities(
 UtilitiesID INT IDENTITY PRIMARY KEY,
@@ -129,8 +145,8 @@ UnitID INT NOT NULL,
 Gasbill FLOAT NOT NULL,
 ElectricityBill FLOAT NOT NULL,
 WaterBill FLOAT NOT NULL,
---computed column	
-TotalFee AS CalculateTotalFee(Gasbill, ElectricityBill, WaterBill),
+--computed column, (dbo.) is required before the function
+TotalFee AS dbo.CalculateTotalFee(Gasbill, ElectricityBill, WaterBill),
 PaymentDate DATE NOT NULL,
 FOREIGN KEY (UnitID) REFERENCES Unit(UnitID)
 );
@@ -169,19 +185,6 @@ CREATE TABLE ProspectiveTenantInterestedUnit(
 );
 
 
--- The function used to create a computed column in Utilities Table
-GO
-
-CREATE FUNCTION CalculateTotalFee(@gas_bill FLOAT, @electricity_bill FLOAT, @water_bill FLOAT)
-RETURNS FLOAT
-AS
-BEGIN
-    DECLARE @TotalFee FLOAT;
-    SET @TotalPayment =  @gas_bill + @electricity_bill + @water_bill
-    RETURN @TotalPayment;
-END
-
-GO
 
 -- create TenantUnit table with a clustered primary key constraint
 CREATE TABLE TenantUnit(
