@@ -271,14 +271,14 @@ VALUES ('John', 'Doe', '555-1234', 'john.doe@email.com'),
        ('Sally', 'Johnson', '555-6543', 'sally.johnson@email.com'),
        ('Mike', 'Williams', '555-2345', 'mike.williams@email.com'),
        ('Karen', 'Davis', '555-4321', 'karen.davis@email.com'),
-       ('Tom', 'Brown', '555-8765', 'tom.brown);
+       ('Tom', 'Brown', '555-8765', 'tom.brown');
 
 
 
 
 -- insert data into Address table
 INSERT INTO Address (DetailedAddress, City, State, Zipcode)
-VALUES ( 100 Main St', 'Seattle', 'CA', 12345),
+VALUES ( '100 Main St', 'Seattle', 'CA', 12345),
        ( '200 Elm St', 'Boston', 'NY', 54321),
        ( '300 Maple Ave.', 'Portland', 'TX', 67890),
        ( '400 Oak Rd.', 'NewYork', 'CA', 23456),
