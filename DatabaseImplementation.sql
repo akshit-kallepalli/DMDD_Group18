@@ -31,13 +31,13 @@ CREATE TABLE Tenant (
   Email VARCHAR(100) NOT NULL
 );
 
--- create Lease_Tenant table with a clustered primary key constraint
-CREATE TABLE Lease_Tenant (
+-- create LeaseTenant table with a clustered primary key constraint
+CREATE TABLE LeaseTenant (
   LeaseID INT NOT NULL
 	REFERENCES Lease(LeaseID),
   TenantID INT NOT NULL
 	REFERENCES Tenant(TenantID),
-  CONSTRAINT PK_Lease_Tenant PRIMARY KEY CLUSTERED (LeaseID, TenantID),
+  CONSTRAINT PK_LeaseTenant PRIMARY KEY CLUSTERED (LeaseID, TenantID),
 );
 
 -- create ManagementCompany table 
@@ -69,7 +69,7 @@ CREATE TABLE EmployeeBuilding(
   EmployeeID INT NOT NULL
 	REFERENCES Employee(EmployeeID),
   BuildingID INT NOT NULL
-	REFERENCES Building(Building_ID),
+	REFERENCES Building(buildingID),
   CONSTRAINT PK_EmployeeBuilding PRIMARY KEY CLUSTERED (EmployeeID, BuildingID)
 );
 
@@ -83,7 +83,7 @@ CREATE TABLE Address(
 );
 
 CREATE TABLE Building (
-  Building_ID INT IDENTITY(1,1) PRIMARY KEY,
+  buildingID INT IDENTITY(1,1) PRIMARY KEY,
   AddressID INT FOREIGN KEY REFERENCES Address(AddressID),
   CompanyID INT FOREIGN KEY REFERENCES ManagementCompany(CompanyID),
   Building_Name VARCHAR(255),
@@ -96,20 +96,18 @@ CREATE TABLE Building (
 
 CREATE TABLE Parking(
    Parking_ID INT IDENTITY(1,1) PRIMARY KEY,
-   UnitID INT FOREIGN KEY REFERENCES Unit(Unit_ID),
+   UnitID INT FOREIGN KEY REFERENCES Unit(UnitID),
    Fee FLOAT,
    PaymentDate DATE
 );
 
 CREATE TABLE Amenity (
   Amenity_ID INT IDENTITY(1,1) PRIMARY KEY,
-  Building_ID INT FOREIGN KEY REFERENCES Building(Building_ID),
+  buildingID INT FOREIGN KEY REFERENCES Building(buildingID),
   Amenity_Name VARCHAR(255),
   Amenity_Type VARCHAR(255),
   Cost FLOAT
 );
-
-
 
 --create table unit
 CREATE TABLE Unit(
@@ -123,8 +121,6 @@ SquareFootage float NOT NULL,
 FOREIGN KEY (BuildingID) REFERENCES Building(BuildingID)
 );
 
-
-
 -- It should be put before "create table utilities"
 -- The function used to create a computed column in Utilities Table
 GO
@@ -134,8 +130,8 @@ RETURNS FLOAT
 AS
 BEGIN
     DECLARE @TotalFee FLOAT;
-    SET @TotalPayment =  @gas_bill + @electricity_bill + @water_bill
-    RETURN @TotalPayment;
+    SET @TotalFee =  @gas_bill + @electricity_bill + @water_bill
+    RETURN @TotalFee;
 END
 
 GO
@@ -153,10 +149,7 @@ PaymentDate DATE NOT NULL,
 FOREIGN KEY (UnitID) REFERENCES Unit(UnitID)
 );
 
---Unit Maintenance Request
 --Prospective Tenant
---Prospective Tenant_InterestedUnit
-
 CREATE TABLE ProspectiveTenant (
   P_tenantID INT IDENTITY PRIMARY KEY,
   FirstName VARCHAR(45) NOT NULL,
@@ -164,7 +157,11 @@ CREATE TABLE ProspectiveTenant (
   PhoneNumber INT NOT NULL,
   Email VARCHAR(45)
 );
- 
+
+ALTER TABLE ProspectiveTenant
+ALTER COLUMN PhoneNumber BIGINT;
+
+--Unit Maintenance Request
 CREATE TABLE UnitMaintenanceRequest (
   RequestID INT IDENTITY PRIMARY KEY,
   TenantID INT NOT NULL,
@@ -178,6 +175,7 @@ CREATE TABLE UnitMaintenanceRequest (
   FOREIGN KEY (UnitID) REFERENCES Unit(UnitID)
 );
 
+--Prospective Tenant_InterestedUnit
 CREATE TABLE ProspectiveTenantInterestedUnit(
    P_TenantID INT NOT NULL
 	REFERENCES ProspectiveTenant(P_tenantID),
@@ -185,8 +183,6 @@ CREATE TABLE ProspectiveTenantInterestedUnit(
 	REFERENCES Unit(UnitID),
   CONSTRAINT PK_ProspectiveTenantInterestedUnit PRIMARY KEY CLUSTERED (P_TenantID, UnitID)
 );
-
-
 
 -- create TenantUnit table with a clustered primary key constraint
 CREATE TABLE TenantUnit(
@@ -202,31 +198,30 @@ CONSTRAINT PK_TenantUnit PRIMARY KEY CLUSTERED (TenantID,UnitID)
 INSERT INTO Unit
 	(BuildingID, UnitNo, Bedroom, Bathroom, Availability, SquareFootage)
 VALUES
-	(1, 101, 1, 1, 'available', 500),
-	(1, 102, 2, 2, 'occupied', 1000),
-	(1, 103, 3, 2.5, 'available', 1500),
-	(2, 201, 2, 1.5, 'occupied', 1000),
-	(2, 202, 1, 1, 'available', 500),
-	(2, 203, 2, 2, 'available', 1000),
-	(3, 301, 2, 1.5, 'available', 1000),
-	(3, 302, 3, 2, 'occupied', 1500),
+	(11, 101, 1, 1, 'available', 500),
+	(10, 102, 2, 2, 'occupied', 1000),
+	(9, 103, 3, 2.5, 'available', 1500),
+	(8, 201, 2, 1.5, 'occupied', 1000),
+	(7, 202, 1, 1, 'available', 500),
+	(6, 203, 2, 2, 'available', 1000),
+	(5, 301, 2, 1.5, 'available', 1000),
+	(5, 302, 3, 2, 'occupied', 1500),
 	(3, 303, 1, 1, 'available', 500),
 	(4, 401, 2, 2, 'occupied', 1000),
 	(4, 402, 3, 2.5, 'available', 1500),
 	(4, 403, 1, 1, 'available', 500),
-	(5, 501, 1, 1, 'occupied', 500),
-	(5, 502, 2, 1.5, 'available', 1000),
-	(5, 503, 3, 2, 'available', 1500);
-
+	(2, 501, 1, 1, 'occupied', 500),
+	(3, 502, 2, 1.5, 'available', 1000),
+	(3, 503, 3, 2, 'available', 1500);
 
 
 INSERT INTO Utilities (UnitID, Gasbill, ElectricityBill, WaterBill, PaymentDate)
 VALUES 
-	(1, 50.0, 25.0, 20.0, '2023-02-01'),
-	(2, 60.0, 30.0, 25.0, '2023-02-01'),
-	(3, 70.0, 35.0, 30.0, '2023-02-01'),
-	(4, 80.0, 40.0, 35.0, '2023-02-01'),
-	(5, 90.0, 45.0, 40.0, '2023-02-01'),
+	(16, 50.0, 25.0, 20.0, '2023-02-01'),
+	(17, 60.0, 30.0, 25.0, '2023-02-01'),
+	(18, 70.0, 35.0, 30.0, '2023-02-01'),
+	(19, 80.0, 40.0, 35.0, '2023-02-01'),
+	(20, 90.0, 45.0, 40.0, '2023-02-01'),
 	(6, 100.0, 50.0, 45.0, '2023-02-01'),
 	(7, 110.0, 55.0, 50.0, '2023-02-01'),
 	(8, 120.0, 60.0, 55.0, '2023-02-01'),
@@ -239,10 +234,10 @@ VALUES
 	(15, 90.0, 45.0, 40.0, '2023-03-01');
 
 
-INSERT INTO Amenity(Building_ID, Amenity_Name, Amenity_Type, Cost)
-VALUES (1, 'Swimming Pool', 'Recreational', 150.00),
-       (1, 'Gym', 'Fitness', 100.00),
-       (2, 'Tennis Court', 'Recreational', 50.00),
+INSERT INTO Amenity(buildingID, Amenity_Name, Amenity_Type, Cost)
+VALUES (9, 'Swimming Pool', 'Recreational', 150.00),
+       (10, 'Gym', 'Fitness', 100.00),
+       (11, 'Tennis Court', 'Recreational', 50.00),
        (2, 'BBQ Area', 'Recreational', 25.00),
        (3, 'Meeting Room', 'Business', 75.00),
        (4, 'Movie Theater', 'Entertainment', 200.00),
@@ -252,11 +247,11 @@ VALUES (1, 'Swimming Pool', 'Recreational', 150.00),
        (8, 'Game Room', 'Entertainment', 125.00);
        
 INSERT INTO Parking(UnitID, Fee, PaymentDate)
-VALUES (1, 50.0, '2022-03-01'),
-       (2, 25.0, '2022-03-02'),
-       (3, 35.0, '2022-03-03'),
-       (4, 20.0, '2022-03-04'),
-       (5, 30.0, '2022-03-05'),
+VALUES (11, 50.0, '2022-03-01'),
+       (12, 25.0, '2022-03-02'),
+       (13, 35.0, '2022-03-03'),
+       (14, 20.0, '2022-03-04'),
+       (15, 30.0, '2022-03-05'),
        (6, 40.0, '2022-03-06'),
        (7, 45.0, '2022-03-07'),
        (8, 15.0, '2022-03-08'),
@@ -277,30 +272,29 @@ VALUES (1, 1, 'ABC Building', 'Office', 50, 10, '123-456-7890', 'abc@building.co
 
 -- insert data into the Lease table
 INSERT INTO Lease (UnitID, TenantID, StartDate, EndDate, MonthlyRent, SecurityDeposit)
-VALUES (1, 1, '2022-01-01', '2023-01-01', 1000.00, 1000.00),
-       (1, 2, '2022-02-01', '2023-02-01', 1200.00, 1200.00),
-       (2, 3, '2022-03-01', '2023-03-01', 1500.00, 1500.00),
-       (2, 4, '2022-04-01', '2023-04-01', 900.00, 900.00),
-       (3, 5, '2022-05-01', '2023-05-01', 800.00, 800.00),
-       (3, 6, '2022-06-01', '2023-06-01', 1100.00, 1100.00),
-       (4, 7, '2022-07-01', '2023-07-01', 950.00, 950.00),
-       (4, 8, '2022-08-01', '2023-08-01', 1300.00, 1300.00),
-       (5, 9, '2022-09-01', '2023-09-01', 1400.00, 1400.00),
-       (5, 10, '2022-10-01', '2023-10-01', 1000.00, 1000.00);
+VALUES (11, 1, '2022-01-01', '2023-01-01', 1000.00, 1000.00),
+       (12, 2, '2022-02-01', '2023-02-01', 1200.00, 1200.00),
+       (13, 3, '2022-03-01', '2023-03-01', 1500.00, 1500.00),
+       (14, 4, '2022-04-01', '2023-04-01', 900.00, 900.00),
+       (15, 5, '2022-05-01', '2023-05-01', 800.00, 800.00),
+       (6, 6, '2022-06-01', '2023-06-01', 1100.00, 1100.00),
+       (7, 7, '2022-07-01', '2023-07-01', 950.00, 950.00),
+       (8, 8, '2022-08-01', '2023-08-01', 1300.00, 1300.00),
+       (9, 9, '2022-09-01', '2023-09-01', 1400.00, 1400.00),
+       (10, 10, '2022-10-01', '2023-10-01', 1000.00, 1000.00);
 
 -- insert data into the LeasePayment table
 INSERT INTO LeasePayment (LeaseID, PaymentAmount, PaymentDate)
-VALUES (1, 1000.00, '2022-01-01'),
-       (1, 200.00, '2022-02-01'),
-       (2, 1200.00, '2022-02-01'),
-       (3, 1500.00, '2022-03-01'),
-       (4, 900.00, '2022-04-01'),
-       (4, 100.00, '2022-05-01'),
+VALUES (10, 1000.00, '2022-01-01'),
+       (11, 200.00, '2022-02-01'),
+       (12, 1200.00, '2022-02-01'),
+       (13, 1500.00, '2022-03-01'),
+       (14, 900.00, '2022-04-01'),
+       (9, 100.00, '2022-05-01'),
        (5, 800.00, '2022-06-01'),
        (6, 1100.00, '2022-07-01'),
        (7, 950.00, '2022-08-01'),
        (8, 1300.00, '2022-09-01');
-
 
 
 -- insert data into the Tenant table
@@ -312,7 +306,6 @@ VALUES ('John', 'Doe', '555-1234', 'john.doe@email.com'),
        ('Mike', 'Williams', '555-2345', 'mike.williams@email.com'),
        ('Karen', 'Davis', '555-4321', 'karen.davis@email.com'),
        ('Tom', 'Brown', '555-8765', 'tom.brown');
-
 
 
 -- insert data into Address table
@@ -372,33 +365,33 @@ VALUES
        (20, 5, 'Amy', 'Taylor', 'Maintenance Staff', 5558901, 'amy.taylor@example.com');
 
 	
--- insert data into ProspectiveTenant
-Insert INTO ProspectiveTenant
-    (P_tenantID, FirstName, LastName, PhoneNumber, Email)
-VALUES ('John', 'Smith', '(730) 729-4030', 'dbrobins@mac.com'),
-       ('Greg', 'Bryant', '(915) 677-2427', 'lstaf@mac.com'),
-       ('Kendra', 'Cox', '(502) 898-8806', 'granboul@verizon.net'),
-       ('Grant', 'Mccoy', '(569) 741-2145', 'sharon@att.net'),
-       ('Dan', 'Wood', '(588) 258-6550', 'birddog@verizon.net'),
-       ('Lula', 'Arnold', '(233) 892-7015', 'melnik@live.com'),
-       ('Andrew', 'Dixon', '(751) 346-5683', 'grady@live.com'),
-       ('Gloria', 'Kennedy', '(912) 795-7161', 'gumpish@aol.com'),
-       ('Clayton', 'Ward', '(323) 567-9962', 'frode@aol.com'),
-       ('Alejandro', 'Dennis', '(610) 401-9660', 'pfitza@live.com');
+INSERT INTO ProspectiveTenant (FirstName, LastName, PhoneNumber, Email)
+VALUES
+  ('John', 'Doe', 1234567890, 'john.doe@email.com'),
+  ('Jane', 'Doe', 2345678901, 'jane.doe@email.com'),
+  ('Bob', 'Smith', 3456789012, 'bob.smith@email.com'),
+  ('Alice', 'Johnson', 4567890123, 'alice.johnson@email.com'),
+  ('David', 'Lee', 5678901234, 'david.lee@email.com'),
+  ('Emily', 'Chen', 6789012345, 'emily.chen@email.com'),
+  ('James', 'Wilson', 7890123456, 'james.wilson@email.com'),
+  ('Sarah', 'Garcia', 8901234567, 'sarah.garcia@email.com'),
+  ('Michael', 'Taylor', 9012345678, 'michael.taylor@email.com'),
+  ('Karen', 'Nguyen', 1234509876, 'karen.nguyen@email.com');
+
 
 -- Assuming TenantID 1 and UnitID 1 exist in their respective tables
 INSERT INTO UnitMaintenanceRequest (TenantID, UnitID, EmployeeID, Description, Status, RequestDate, CompletedDate)
 VALUES
-(1, 1, 123, 'Leaky faucet', 'Open', '2023-03-01', '2023-03-05'),
-(2, 2, 234, 'Broken toilet', 'Open', '2023-03-02', '2023-03-06'),
-(3, 1, 345, 'Clogged drain', 'Open', '2023-03-03', '2023-03-07'),
-(4, 3, 456, 'Faulty light switch', 'Open', '2023-03-04', '2023-03-08'),
-(5, 2, 567, 'No hot water', 'Open', '2023-03-05', '2023-03-09'),
-(6, 3, 678, 'Leaking ceiling', 'Open', '2023-03-06', '2023-03-10'),
-(7, 1, 789, 'Loud HVAC unit', 'Open', '2023-03-07', '2023-03-11'),
-(8, 2, 890, 'Bathroom sink not draining', 'Open', '2023-03-08', '2023-03-12'),
-(9, 3, 901, 'Damaged window', 'Open', '2023-03-09', '2023-03-13'),
-(10, 1, 012, 'Appliance not working', 'Open', '2023-03-10', '2023-03-14');
+(1, 11, 123, 'Leaky faucet', 'Open', '2023-03-01', '2023-03-05'),
+(2, 12, 234, 'Broken toilet', 'Open', '2023-03-02', '2023-03-06'),
+(3, 10, 345, 'Clogged drain', 'Open', '2023-03-03', '2023-03-07'),
+(4, 13, 456, 'Faulty light switch', 'Open', '2023-03-04', '2023-03-08'),
+(5, 6, 567, 'No hot water', 'Open', '2023-03-05', '2023-03-09'),
+(6, 7, 678, 'Leaking ceiling', 'Open', '2023-03-06', '2023-03-10'),
+(7, 8, 789, 'Loud HVAC unit', 'Open', '2023-03-07', '2023-03-11'),
+(8, 9, 890, 'Bathroom sink not draining', 'Open', '2023-03-08', '2023-03-12'),
+(9, 13, 901, 'Damaged window', 'Open', '2023-03-09', '2023-03-13'),
+(10, 10, 012, 'Appliance not working', 'Open', '2023-03-10', '2023-03-14');
 
  
 --insert data into EmployeeBuilding table
@@ -413,10 +406,10 @@ VALUES
     (7, 4),
     (8, 3),
     (9, 2),
-    (10, 1);
+    (10, 11);
     
-INSERT INTO Lease_Tenant (LeaseID, TenantID) VALUES
-(3, 1),
+INSERT INTO LeaseTenant (LeaseID, TenantID) VALUES
+(13, 1),
 (6, 2),
 (7, 3),
 (8, 4),
@@ -425,61 +418,33 @@ INSERT INTO Lease_Tenant (LeaseID, TenantID) VALUES
 (11, 7),
 (12, 8),
 (13, 9),
-(20, 10);
+(10, 10);
 
 
 INSERT INTO TenantUnit (TenantID, UnitID) VALUES
-(1, 1),
-(2, 3),
-(3, 5),
-(4, 6),
-(5, 7),
+(1, 11),
+(2, 13),
+(3, 15),
+(4, 9),
+(5, 10),
 (6, 9),
-(7, 12),
-(8, 14),
-(9, 15),
-(10, 11);
+(7, 6),
+(8, 7),
+(9, 8),
+(10, 9);
 
 INSERT INTO ProspectiveTenantInterestedUnit (P_TenantID, UnitID) VALUES
-(1, 9),
-(1, 8),
-(2, 6),
-(3, 9),
-(4, 4),
-(5,3),
+(11, 9),
+(10, 8),
+(12, 6),
+(13, 9),
+(14, 14),
+(15,13),
 (6, 7),
 (7, 8),
 (8, 9),
 (9, 10);
 
-
-       
--- create a funtion used to create a computed column
-GO
-
-CREATE FUNCTION GetTotalParkingFee_Unit(@UnitID INT)
-RETURNS FLOAT(2)
-AS
-BEGIN
-    DECLARE @TotalPayment FLOAT(2)
-    SELECT  @TotalPayment = SUM(Fee) 
-    FROM Parking
-    WHERE UnitID = @UnitID
-    RETURN @TotalPayment;
-END
-
-GO
-
-
--- create a view to show the total parking payment for each unit
-
-CREATE VIEW unit_parkingfee AS(
-    SELECT DISTINCT UnitID, dbo.GetTotalParkingFee_Unit(UnitID) AS TotalParkingPayment, COUNT(UnitID) AS PaymentTimes
-    FROM Parking p
-    GROUP BY UnitID
-)
-
-SELECT * FROM unit_parkingfee;
 
 -- Table-level CHECK Constraints based on a function
 
@@ -557,7 +522,33 @@ INSERT INTO Unit (BuildingID, UnitNo, Bedroom, Bathroom, Availability, SquareFoo
 VALUES (1, 101, 2, 1.5, 'Available', 12.0);
 
 
---  create view to see the units and maintenance req
+-- create a funtion used to create a computed column
+GO
+
+CREATE FUNCTION GetTotalParkingFee_Unit(@UnitID INT)
+RETURNS FLOAT(2)
+AS
+BEGIN
+    DECLARE @TotalPayment FLOAT(2)
+    SELECT  @TotalPayment = SUM(Fee) 
+    FROM Parking
+    WHERE UnitID = @UnitID
+    RETURN @TotalPayment;
+END
+
+GO
+
+-- create a view to show the total parking payment for each unit
+
+CREATE VIEW unit_parkingfee AS(
+    SELECT DISTINCT UnitID, dbo.GetTotalParkingFee_Unit(UnitID) AS TotalParkingPayment, COUNT(UnitID) AS PaymentTimes
+    FROM Parking p
+    GROUP BY UnitID
+)
+
+SELECT * FROM unit_parkingfee;
+
+--  create a view to see the units and their maintenance requests
 
 CREATE VIEW MaintenanceRequests
 AS
@@ -565,7 +556,6 @@ SELECT r.RequestID, r.TenantID, r.UnitID, u.UnitNo, u.Availability, r.Descriptio
 FROM UnitMaintenanceRequest r
 JOIN Unit u ON r.UnitID = u.UnitID;
 -- SELECT * FROM MaintenanceRequests;
-
 
 
 -- View for prospective tenants to view all the available units
@@ -581,7 +571,7 @@ SELECT
   Unit.Availability
 FROM 
   Building
-  INNER JOIN Unit ON Building.Building_ID = Unit.BuildingID
-  LEFT JOIN Amenity ON Building.Building_ID = Amenity.Building_ID
+  INNER JOIN Unit ON Building.buildingID = Unit.BuildingID
+  LEFT JOIN Amenity ON Building.buildingID = Amenity.buildingID
 WHERE 
   Unit.Availability = 'Available'
